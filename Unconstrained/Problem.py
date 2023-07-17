@@ -1,6 +1,6 @@
-'''The main abstract class that defines a problem.
+'''The Abstract Class that defines an unconstrained problem.
 
-All problems defined with this class have:
+All problems defined in this class have:
 
 1. Single objective function
 2. Continuous Variables
@@ -16,22 +16,22 @@ class Problem(ABC):
     Attributes
 
     name    :   Name of the problem
-    n       :   Dimension of the problem
+    d       :   Dimension of the problem
     '''
 
-    def __init__(self, name : str, n : int) -> None:
+    def __init__(self, name : str, d : int) -> None:
         self.name = name
-        self.n = n
+        self.d = d
     
     def name(self) -> str:
         return self.name
     
-    def n(self) -> int:
-        return self.n
+    def d(self) -> int:
+        return self.d
     
     @abstractmethod
     def initial_point(self) -> np.array:
-        '''initial point of the problem, shape (n, 1)'''        
+        '''initial point of the problem, shape (d, 1)'''        
         pass
 
     @abstractmethod
@@ -41,11 +41,11 @@ class Problem(ABC):
 
     @abstractmethod
     def gradient(self, x : np.array) -> np.array:
-        '''return gradient of function, shape (n, 1)'''
+        '''return gradient of function, shape (d, 1)'''
         pass
 
     @abstractmethod
     def hessian(self, x : np.array) -> np.array:
-        '''returns hessian of problem, shape (n, 1)'''
+        '''returns hessian of problem, shape (d, 1)'''
         pass
 
