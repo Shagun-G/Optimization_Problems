@@ -1,4 +1,4 @@
-'''The Abstract Class that defines an unconstrained problem.
+'''Abstract Class that define problems.
 
 All problems defined in this class have:
 
@@ -10,10 +10,12 @@ All problems defined in this class have:
 from abc import ABC, abstractmethod
 import numpy as np
 
-class Problem(ABC):
+class Unconstrained(ABC):
 
     '''
-    Attributes
+    Defines structure of unconstrained problems.
+
+    Required Attributes:
 
     name    :   Name of the problem
     d       :   Dimension of the problem
@@ -46,6 +48,6 @@ class Problem(ABC):
 
     @abstractmethod
     def hessian(self, x : np.array) -> np.array:
-        '''returns hessian of problem, shape (d, 1)'''
+        '''returns hessian of problem, shape (d, d)'''
         pass
 
