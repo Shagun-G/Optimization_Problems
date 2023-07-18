@@ -13,7 +13,7 @@ import numpy as np
 class Unconstrained(ABC):
 
     '''
-    Defines structure of unconstrained problems.
+    Defines structure of enconstrained problems.
 
     Required Attributes:
 
@@ -22,14 +22,16 @@ class Unconstrained(ABC):
     '''
 
     def __init__(self, name : str, d : int) -> None:
-        self.name = name
-        self.d = d
+        self._name = name
+        self._d = d
     
+    @property
     def name(self) -> str:
-        return self.name
+        return self._name
     
+    @property
     def d(self) -> int:
-        return self.d
+        return self._d
     
     @abstractmethod
     def initial_point(self) -> np.array:

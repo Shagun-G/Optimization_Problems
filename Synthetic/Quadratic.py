@@ -18,10 +18,10 @@ class Quadratic(Unconstrained):
         super().__init__("Quadratic", d)
 
     def initial_point(self) -> np.array:
-        return np.zeros((self.d, 1))
+        return np.zeros((self._d, 1))
     
     def objective(self, x: np.array) -> float:
-        val = self.c + np.dot(x.T, self.b) + np.dot(np.dot(x.T, self.A), x)/2
+        val = self.c + np.dot(x.T, self.b) + 0.5*np.dot(np.dot(x.T, self.A), x)
         return val[0, 0]
 
     def gradient(self, x: np.array) -> np.array:
@@ -42,14 +42,14 @@ class Quadratic(Unconstrained):
             xi      :   constrols condition number, increase to increase conditon number 
                         (optional, default 2)
         '''
-        np.random.seed(seed)
+        rng = np.random.default_rng(seed)   # random generator to avoid setting global generator
         s1 = 10**np.arange(xi)
         s2 = 1/10**np.arange(xi)
         if d%2 == 0:
-            v = np.hstack((np.random.choice(s1, size = int(d/2)), np.random.choice(s2, size = int(d/2))))
+            v = np.hstack((rng.choice(s1, size = int(d/2)), rng.choice(s2, size = int(d/2))))
         else:
-            v = np.hstack((np.random.choice(s1, size = int(d/2) + 1), np.random.choice(s2, size = int(d/2))))
+            v = np.hstack((rng.choice(s1, size = int(d/2) + 1), rng.choice(s2, size = int(d/2))))
         A = np.diag(v)
-        b = np.random.uniform(0, 1, d)*10**(int(xi/2))
+        b = rng.random((d))*10**(int(xi/2))
         print("Condition number : ", np.linalg.cond(A))
         return cls(d = d, A = np.diag(v), b = b, c = np.array([0]))
