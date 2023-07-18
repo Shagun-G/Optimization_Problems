@@ -51,5 +51,5 @@ class Quadratic(Unconstrained):
             v = np.hstack((rng.choice(s1, size = int(d/2) + 1), rng.choice(s2, size = int(d/2))))
         A = np.diag(v)
         b = rng.random((d))*10**(int(xi/2))
-        print("Condition number : ", np.linalg.cond(A))
+        # print("Condition number : ", np.linalg.cond(A))
         return cls(d = d, A = np.diag(v), b = b, c = np.array([0]))

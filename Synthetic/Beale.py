@@ -1,7 +1,7 @@
 from Base_classes import Unconstrained
 
 import numpy as np
-
+# TODO : Hessian implementation
 class Beale(Unconstrained):
     '''Defines a Beale function problem.'''
 
@@ -29,15 +29,4 @@ class Beale(Unconstrained):
 
     def hessian(self, x: np.array) -> np.array:
 
-        H = np.zeros((self._d, self._d))
-        # for i in range(3)
-        #     H[0,0] += 2*(1 - x[1, 0]**(i+1))*(1 - x[1, 0]**(i+1))  
-        #     H[1,0] += 2*(self._data[i] - x[0,0]*(1 - x[1, 0]**(i+1)))*(-1 + x[1, 0]**(i+1))
-        #     if i ==0:
-        #         H[1,1] += 2*(x[0,0]*(x[1, 0]))*x[0, 0]
-        #     else:
-        #         H[1,1] += 2*(self._data[i] - x[0,0]*(1 - x[1, 0]**(i+1)))*x[0, 0]*(i+1)*i*(x[1, 0]**(i-1)) + 2*(i+1)*(x[0,0]*x[1, 0]**(i))*x[0, 0]*(i+1)*(x[1, 0]**(i))       
-        
-        # H[1,1] *= 2*x[0,0]
-        H[0,1] = H[1,0]
-        return H
+       raise Exception("{} hessian not available".format(self.name)) 
