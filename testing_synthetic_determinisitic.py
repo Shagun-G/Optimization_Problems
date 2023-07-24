@@ -1,7 +1,7 @@
 import numpy as np
 
 # * Quadratic Problem
-from Synthetic.Quadratic import Quadratic
+from Synthetic_Deterministic.Quadratic import Quadratic
 
 # Specifying
 problem = Quadratic(d=2, c=np.array([1]), b=np.array([[1, -1]]), A=np.ones((2, 2)))
@@ -9,22 +9,22 @@ problem = Quadratic(d=2, c=np.array([1]), b=np.array([[1, -1]]), A=np.ones((2, 2
 problem = Quadratic.generate(d=4, xi=3, seed=100)
 
 # * Rosenbrock Problem
-from Synthetic.Rosenbrock import Rosenbrock
+from Synthetic_Deterministic.Rosenbrock import Rosenbrock
 
 problem = Rosenbrock(d=3)
 
 # * Beale Problem
-from Synthetic.Beale import Beale
+from Synthetic_Deterministic.Beale import Beale
 
 problem = Beale()
 
 # * Branin Problem
-from Synthetic.Branin import Branin
+from Synthetic_Deterministic.Branin import Branin
 
 problem = Branin()
 
 # * 6 Hump Camel
-from Synthetic.hump_camel import hump_camel
+from Synthetic_Deterministic.hump_camel import hump_camel
 
 problem = hump_camel()
 

@@ -32,7 +32,7 @@ class Quadratic(Unconstrained):
         return self.A
 
     @classmethod
-    def generate(cls, d: int, seed: int = 100, xi: int = 2):
+    def generate(cls, d: int, seed: int | None = None, xi: int = 2):
         """Generates a quadratic based on the process in Numerical Experiments in:
         A. Mokhtari, Q. Ling and A. Ribeiro, "Network Newton Distributed Optimization Methods," in IEEE Transactions on Signal Processing, vol. 65, no. 1, pp. 146-161, 1 Jan.1, 2017, doi: 10.1109/TSP.2016.2617829.
 
@@ -42,7 +42,15 @@ class Quadratic(Unconstrained):
         xi      :   constrols condition number, increase to increase conditon number
                     (optional, default 2)
         """
-        rng = np.random.default_rng(seed)  # random generator to avoid setting global generator
+        
+        # random generator to avoid setting global generator
+        if seed is None:
+            rng = np.random.default_rng(np.random.randint(np.iinfo(np.int16).max, size = 1)[0])
+        elif isinstance(seed, int):  
+            rng = np.random.default_rng(seed)
+        else:
+            raise Exception("seed must be an enteger if specified")
+
         s1 = 10 ** np.arange(xi)
         s2 = 1 / 10 ** np.arange(xi)
         if d % 2 == 0:
