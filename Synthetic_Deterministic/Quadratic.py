@@ -42,11 +42,11 @@ class Quadratic(Unconstrained):
         xi      :   constrols condition number, increase to increase conditon number
                     (optional, default 2)
         """
-        
+
         # random generator to avoid setting global generator
         if seed is None:
-            rng = np.random.default_rng(np.random.randint(np.iinfo(np.int16).max, size = 1)[0])
-        elif isinstance(seed, int):  
+            rng = np.random.default_rng(np.random.randint(np.iinfo(np.int16).max, size=1)[0])
+        elif isinstance(seed, int):
             rng = np.random.default_rng(seed)
         else:
             raise Exception("seed must be an enteger if specified")

@@ -2,6 +2,10 @@ from Machine_Learning.Logistic_Regression import Cross_Entropy_Binary
 
 # * Cross Entropy logistic regression problems
 
-problem = Cross_Entropy_Binary(name = "australian", location="../../Datasets/australian_scale.txt", sparse_format=False)
+problem = Cross_Entropy_Binary(name="gisette", location="../Datasets/gisette_scale.bz2", sparse_format=True)
 
 print(problem._targets)
+print(problem._features)
+print(problem._number_of_features)
+print(problem._number_of_datapoints)
+print(problem.name)
