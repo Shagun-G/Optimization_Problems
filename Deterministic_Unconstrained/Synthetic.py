@@ -1,44 +1,47 @@
 from Base_classes import Unconstrained
-
 import numpy as np
+
 
 class Quadratic(Unconstrained):
 
     """
     Generates a quadratic function:
-    A   :   matrix for quadratic
-    b   :   linear term for quadratic
-    c   :   constant term for wuadratic
-    d   :   dimension of problem
     """
 
-    def __init__(self, d: int, A: np.array, b: np.array, c: np.array) -> None:
-        self.A = A
-        self.b = b.reshape(d, 1)
-        self.c = c.reshape(1, 1)
+    def __init__(self, d: int, A: np.array, b: np.array, c: np.array):
+        """
+        Inputs :
+        A   :   matrix for quadratic
+        b   :   linear term for quadratic
+        c   :   constant term for wuadratic
+        d   :   dimension of problem
+        """
+        self._A = A
+        self._b = b.reshape(d, 1)
+        self._c = c.reshape(1, 1)
         super().__init__("Quadratic", d)
 
     def initial_point(self) -> np.array:
         return np.zeros((self._d, 1))
 
     def objective(self, x: np.array) -> float:
-        val = self.c + np.dot(x.T, self.b) + 0.5 * np.dot(np.dot(x.T, self.A), x)
+        val = self._c + np.dot(x.T, self._b) + 0.5 * np.dot(np.dot(x.T, self._A), x)
         return val[0, 0]
 
     def gradient(self, x: np.array) -> np.array:
-        return self.b + np.dot(self.A, x)
+        return self._b + np.dot(self._A, x)
 
     def hessian(self, x: np.array) -> np.array:
-        return self.A
+        return self._A
 
     @classmethod
     def generate(cls, d: int, seed: int | None = None, xi: int = 2):
         """Generates a quadratic based on the process in Numerical Experiments in:
         A. Mokhtari, Q. Ling and A. Ribeiro, "Network Newton Distributed Optimization Methods," in IEEE Transactions on Signal Processing, vol. 65, no. 1, pp. 146-161, 1 Jan.1, 2017, doi: 10.1109/TSP.2016.2617829.
 
-        Attributes:
+        Inputs:
 
-        seed    :   seed for sampling (optional, default 100)
+        seed    :   seed for sampling (optional)
         xi      :   constrols condition number, increase to increase conditon number
                     (optional, default 2)
         """
@@ -65,7 +68,7 @@ class Quadratic(Unconstrained):
 class Rosenbrock(Unconstrained):
     """Defines a rosenbrock function problem."""
 
-    def __init__(self, d: int) -> None:
+    def __init__(self, d: int):
         if d < 2:
             raise Exception("Rosenbrock must be atleast dimension 2")
 
@@ -102,11 +105,12 @@ class Rosenbrock(Unconstrained):
             H[i + 1, i] = H[i, i + 1]
         return H
 
+
 # TODO : Hessian implementation
 class Beale(Unconstrained):
     """Defines a Beale function problem."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         self._data = np.array([1.5, 2.25, 2.625])
         super().__init__("Beale", 2)
 
@@ -134,9 +138,9 @@ class Beale(Unconstrained):
 # TODO : gradient
 # TODO : hessian
 class Branin(Unconstrained):
-    """Defines a branin function problem."""
+    """Defines a Branin function problem."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__("Branin", 2)
 
     def initial_point(self) -> np.array:
@@ -167,7 +171,7 @@ class Branin(Unconstrained):
 class hump_camel(Unconstrained):
     """Defines a 6 Hump Camel function problem."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__("6 Hump Camel", 2)
 
     def initial_point(self) -> np.array:
