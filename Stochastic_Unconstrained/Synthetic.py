@@ -1,7 +1,7 @@
 import numpy as np
 from Base_classes import Unconstrained
 
-
+#TODO : Add methods to access features as properties
 # TODO : function documentation
 class Quadratic(Unconstrained):
 

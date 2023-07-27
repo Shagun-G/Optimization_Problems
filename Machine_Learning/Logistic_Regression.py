@@ -3,7 +3,7 @@ from Base_classes import Unconstrained
 from sklearn.datasets import load_svmlight_file
 from scipy import sparse
 
-
+#TODO : Add methods to access features as properties
 class Cross_Entropy_Binary(Unconstrained):
     def __init__(self, location: str, name: str):
         """
