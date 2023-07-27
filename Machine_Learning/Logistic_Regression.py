@@ -14,8 +14,8 @@ class Cross_Entropy_Binary(Unconstrained):
 
         object attributes:
         _number_of_features : number of features, includes the bias term
-        _number_of_features : number of classes
-        _feasures           : feature dataset (number of features x number of datapoints),
+        _number_of_classes  : number of classes
+        _features           : feature dataset (number of features x number of datapoints),
                             includes bias term constant
         _targets            : target labels ({0,1} x number of datapoints)
         """
@@ -156,8 +156,8 @@ class Cross_Entropy_Multiclass(Unconstrained):
 
         object attributes:
         _number_of_features : number of features, includes the bias term
-        _number_of_features : number of classes
-        _feasures           : feature dataset (number of features x number of datapoints),
+        _number_of_classes  : number of classes
+        _features           : feature dataset (number of features x number of datapoints),
                             includes bias term constant
         _targets            : target labels ({0,1} x number of datapoints)
         """
