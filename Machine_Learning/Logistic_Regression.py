@@ -3,7 +3,6 @@ from Base_classes import Unconstrained
 from sklearn.datasets import load_svmlight_file
 from scipy import sparse
 
-#TODO : Add methods to access features as properties
 class Cross_Entropy_Binary(Unconstrained):
     def __init__(self, location: str, name: str):
         """
@@ -57,6 +56,18 @@ class Cross_Entropy_Binary(Unconstrained):
 
     def initial_point(self) -> np.ndarray:
         return np.zeros([self._number_of_features, 1])
+
+    @property
+    def number_of_datapoints(self) -> int:
+        return self._number_of_datapoints
+    
+    @property
+    def number_of_classes(self) -> int:
+        return self._number_of_classes
+    
+    @property 
+    def number_of_features(self) -> int:
+        return self._number_of_features
 
     def _determine_batch(self, type: str = "full", batch_size: int = 0, seed: int | None = None) -> np.array:
         """

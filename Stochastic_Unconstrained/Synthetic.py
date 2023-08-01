@@ -1,7 +1,6 @@
 import numpy as np
 from Base_classes import Unconstrained
 
-#TODO : Add methods to access features as properties
 # TODO : function documentation
 class Quadratic(Unconstrained):
 
@@ -52,6 +51,10 @@ class Quadratic(Unconstrained):
 
     def initial_point(self) -> np.array:
         return np.ones((self.d, 1))
+
+    @property
+    def number_of_datapoints(self) -> int:
+        return self._number_of_datapoints
 
     def _determine_batch(self, type: str = "full", batch_size: int = 0, seed: int | None = None) -> np.array:
         """
