@@ -70,7 +70,7 @@ class Cross_Entropy_Binary(Unconstrained):
     def number_of_features(self) -> int:
         return self._number_of_features
 
-    def _determine_batch(self, type: str = "full", batch_size: int = 0, seed: int | None = None) -> np.array:
+    def _determine_batch(self, type: str, batch_size: int = 0, seed: int | None = None) -> np.array:
         """
         Generates an array of indices for a batch of data for calculation
         Inputs:
@@ -102,7 +102,7 @@ class Cross_Entropy_Binary(Unconstrained):
 
         raise Exception(f"{type} is not a defined type of gradient")
 
-    def objective(self, x: np.array, type: str = "full", batch_size: int = 0, seed: int | None = None) -> float:
+    def objective(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None) -> float:
         """
         Calculates loss for full or a stochastic batch of data
         Inputs:
@@ -126,7 +126,7 @@ class Cross_Entropy_Binary(Unconstrained):
         loss[np.isnan(loss)] = 0
         return np.sum(loss)
 
-    def gradient(self, x: np.array, type: str = "full", batch_size: int = 0, seed: int | None = None) -> np.ndarray:
+    def gradient(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None) -> np.ndarray:
         """MLE Loss gradient"""
         """
         Calculates gradient of loss for full or a stochastic batch of data

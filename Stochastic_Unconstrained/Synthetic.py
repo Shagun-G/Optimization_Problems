@@ -57,7 +57,7 @@ class Quadratic(Unconstrained):
     def number_of_datapoints(self) -> int:
         return self._number_of_datapoints
 
-    def _determine_batch(self, type: str = "full", batch_size: int = 0, seed: int | None = None) -> np.array:
+    def _determine_batch(self, type: str, batch_size: int = 0, seed: int | None = None) -> np.array:
         """
         Generates an array of indices for a batch of data for calculation
         Inputs:
@@ -89,7 +89,7 @@ class Quadratic(Unconstrained):
 
         raise Exception(f"{type} is not a defined type of gradient")
 
-    def objective(self, x: np.array, type: str = "full", batch_size: int = 0, seed: int | None = None) -> float:
+    def objective(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None) -> float:
         s = self._determine_batch(type, batch_size, seed)
         x = x.reshape((self.d, 1))
         val = 0.5 * np.dot(np.dot(x.T, np.sum(self._A_list[:, :, s], axis=2)), x) + np.dot(
@@ -98,13 +98,13 @@ class Quadratic(Unconstrained):
 
         return val[0, 0]
 
-    def gradient(self, x: np.array, type: str = "full", batch_size: int = 0, seed: int | None = None) -> np.array:
+    def gradient(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None) -> np.array:
         s, batch_size = self._determine_batch(type, batch_size, seed)
         x = x.reshape((self.d, 1))
         val = np.dot(np.sum(self._A_list[:, :, s], axis=2), x) + np.sum(self._b_list[:, s], axis=1).reshape((self.d, 1))
 
         return val
 
-    def hessian(self, x: np.array, type: str = "full", batch_size: int = 0, seed: int | None = None) -> np.array:
+    def hessian(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None) -> np.array:
         s, batch_size = self._determine_batch(type, batch_size, seed)
         return np.sum(self._A_list[:, :, s], axis=2)
