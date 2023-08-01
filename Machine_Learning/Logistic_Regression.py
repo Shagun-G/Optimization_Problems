@@ -69,7 +69,7 @@ class Cross_Entropy_Binary(Unconstrained):
         if type == "full":
             s = np.arange(self._number_of_datapoints)
             batch_size = self._number_of_datapoints
-            return s
+            return s, batch_size
 
         if type == "stochastic":
             if seed is None:
@@ -86,7 +86,7 @@ class Cross_Entropy_Binary(Unconstrained):
                 raise Exception("Batch size specified is larger than size of dataset")
 
             s = rng.choice(self._number_of_datapoints, size=(batch_size), replace=False)
-            return s
+            return s, batch_size
 
         raise Exception(f"{type} is not a defined type of gradient")
 
@@ -101,7 +101,7 @@ class Cross_Entropy_Binary(Unconstrained):
         """
         """Evaluates MLE loss"""
 
-        s = self._determine_batch(type, batch_size, seed)
+        s, batch_size = self._determine_batch(type, batch_size, seed)
 
         # signmoid calculate
         exp_neg = np.exp(-np.dot(x.T, self._features[:, s])).T
@@ -125,7 +125,7 @@ class Cross_Entropy_Binary(Unconstrained):
         seed        :   (optional) if not specified, random batch, else specify for the same batch of data
         """
 
-        s = self._determine_batch(type, batch_size, seed)
+        s, batch_size = self._determine_batch(type, batch_size, seed)
         x = x.reshape((self._number_of_features, 1))
 
         """Non sparse calculation"""

@@ -64,7 +64,7 @@ class Quadratic(Unconstrained):
         if type == "full":
             s = np.arange(self._number_of_datapoints)
             batch_size = self._number_of_datapoints
-            return s
+            return s, batch_size
 
         if type == "stochastic":
             if seed is None:
@@ -81,7 +81,7 @@ class Quadratic(Unconstrained):
                 raise Exception("Batch size specified is larger than size of dataset")
 
             s = rng.choice(self._number_of_datapoints, size=(batch_size), replace=False)
-            return s
+            return s, batch_size
 
         raise Exception(f"{type} is not a defined type of gradient")
 
@@ -95,12 +95,12 @@ class Quadratic(Unconstrained):
         return val[0, 0]
 
     def gradient(self, x: np.array, type: str = "full", batch_size: int = 0, seed: int | None = None) -> np.array:
-        s = self._determine_batch(type, batch_size, seed)
+        s, batch_size = self._determine_batch(type, batch_size, seed)
         x = x.reshape((self.d, 1))
         val = np.dot(np.sum(self._A_list[:, :, s], axis=2), x) + np.sum(self._b_list[:, s], axis=1).reshape((self.d, 1))
 
         return val
 
     def hessian(self, x: np.array, type: str = "full", batch_size: int = 0, seed: int | None = None) -> np.array:
-        s = self._determine_batch(type, batch_size, seed)
+        s, batch_size = self._determine_batch(type, batch_size, seed)
         return np.sum(self._A_list[:, :, s], axis=2)
