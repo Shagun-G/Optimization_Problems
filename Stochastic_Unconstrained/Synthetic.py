@@ -1,6 +1,7 @@
 import numpy as np
 from Base_classes import Unconstrained
 
+
 # TODO : function documentation
 class Quadratic(Unconstrained):
 

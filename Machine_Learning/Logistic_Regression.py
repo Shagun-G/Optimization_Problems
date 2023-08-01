@@ -3,6 +3,7 @@ from Base_classes import Unconstrained
 from sklearn.datasets import load_svmlight_file
 from scipy import sparse
 
+
 class Cross_Entropy_Binary(Unconstrained):
     def __init__(self, location: str, name: str):
         """
@@ -60,12 +61,12 @@ class Cross_Entropy_Binary(Unconstrained):
     @property
     def number_of_datapoints(self) -> int:
         return self._number_of_datapoints
-    
+
     @property
     def number_of_classes(self) -> int:
         return self._number_of_classes
-    
-    @property 
+
+    @property
     def number_of_features(self) -> int:
         return self._number_of_features
 
