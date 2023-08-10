@@ -143,7 +143,7 @@ class Cross_Entropy_Binary(Unconstrained):
         batch_size  :   (optional) only used when stochastic type of batch
         seed        :   (optional) if not specified, random batch, else specify for the same batch of data
         """
-
+        
         s, batch_size = self._determine_batch(type, batch_size, seed)
         x = x.reshape((self._number_of_features, 1))
 
