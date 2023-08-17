@@ -52,6 +52,7 @@ class Cross_Entropy_Binary(Unconstrained):
         if name not in location:
             raise Exception("Name and file pointed to in location are different")
 
+        self._dataset_name = name
         self._number_of_datapoints, self._number_of_features = np.shape(X)
         y = y.reshape((self._number_of_datapoints, 1))  # reshaping target matrix
         # adding bias term to features
@@ -64,6 +65,10 @@ class Cross_Entropy_Binary(Unconstrained):
 
     def initial_point(self) -> np.ndarray:
         return np.zeros([self._number_of_features, 1])
+
+    @property
+    def dataset_name(self) -> str:
+        return self._dataset_name
 
     @property
     def number_of_datapoints(self) -> int:
