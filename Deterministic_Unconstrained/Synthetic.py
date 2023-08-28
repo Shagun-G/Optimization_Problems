@@ -1,6 +1,42 @@
 from Base_classes import Unconstrained
 import numpy as np
+from typing import Callable
 
+class Generator(Unconstrained):
+    """
+    Generates a deterministic unconstrained problem using the specified, function, gradient and hessian oracles in the framework of this repository.
+    """
+
+    def __init__(self, name: str, d: int, x_init : None | np.ndarray, objective : Callable | None = None, gradient : Callable | None = None, hessian: Callable | None = None) -> None:
+
+        self.x_init = np.reshape(x_init, (d, 1))
+        self.func = objective
+        self.grad = gradient
+        self.hess = hessian
+        if objective == None and gradient == None and hessian == None:
+            raise "Need atleast one of function, gradient or hessian for the optimization problem"
+
+        super().__init__(name, d)
+
+    def initial_point(self) -> np.array:
+        if self.x_init.any() == None:
+            return np.zeros((self._d, 1))
+        return self.x_init
+
+    def objective(self, x: np.array) -> float:
+        if self.func == None:
+            raise Exception("function oracle not available for " + self.name)
+        return self.func(x)
+
+    def gradient(self, x: np.array) -> np.array:
+        if self.grad == None:
+            raise Exception("gradient oracle not available for " + self.name)
+        return self.grad(x)
+
+    def hessian(self, x: np.array) -> np.array:
+        if self.hess == None:
+            raise Exception("hessian oracle not available for " + self.name)
+        return self.hess(x)
 
 class Quadratic(Unconstrained):
 

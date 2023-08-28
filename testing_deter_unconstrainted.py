@@ -9,33 +9,45 @@ problem = Quadratic(d=2, c=np.array([1]), b=np.array([[1, -1]]), A=np.ones((2, 2
 problem = Quadratic.generate(d=4, xi=3, seed=100)
 
 # * Rosenbrock Problem
-from Deterministic_Unconstrained.Synthetic import Rosenbrock
+# from Deterministic_Unconstrained.Synthetic import Rosenbrock
 
-problem = Rosenbrock(d=3)
+# problem = Rosenbrock(d=3)
 
 # * Beale Problem
-from Deterministic_Unconstrained.Synthetic import Beale
+# from Deterministic_Unconstrained.Synthetic import Beale
 
-problem = Beale()
+# problem = Beale()
 
 # * Branin Problem
-from Deterministic_Unconstrained.Synthetic import Branin
+# from Deterministic_Unconstrained.Synthetic import Branin
 
-problem = Branin()
+# problem = Branin()
 
 # * 6 Hump Camel
-from Deterministic_Unconstrained.Synthetic import hump_camel
+# from Deterministic_Unconstrained.Synthetic import hump_camel
 
-problem = hump_camel()
+# problem = hump_camel()
 
 """Calling all functions"""
 print("Name: " + problem.name)
 print("Dimension : ", problem.d)
 print("At x = ", problem.initial_point())
 print("Function: ", problem.objective(x=problem.initial_point()))
-# print("Gradient : ", problem.gradient(x = problem.initial_point()))
-# print("Hessian: ", problem.hessian(x = problem.initial_point()))
+print("Gradient : ", problem.gradient(x = problem.initial_point()))
+print("Hessian: ", problem.hessian(x = problem.initial_point()))
 print("------------------------------------------")
+
+'''checking generator'''
+# from Deterministic_Unconstrained.Synthetic import Generator
+
+# problem_generated = Generator(name=problem.name, d = problem.d, objective=problem.objective, gradient=problem.gradient, x_init=problem.initial_point())
+# print("Name: " + problem_generated.name)
+# print("Dimension : ", problem_generated.d)
+# print("At x = ", problem_generated.initial_point())
+# print("Function: ", problem_generated.objective(x=problem_generated.initial_point()))
+# print("Gradient : ", problem_generated.gradient(x = problem_generated.initial_point()))
+# print("Hessian: ", problem_generated.hessian(x = problem_generated.initial_point()))
+# print("------------------------------------------")
 
 """Checking Gradient and Hessian Code with autodifferentiation"""
 # x = np.random.rand(problem.d, 1)
