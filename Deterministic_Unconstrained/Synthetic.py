@@ -2,13 +2,21 @@ from Base_classes import Unconstrained
 import numpy as np
 from typing import Callable
 
+
 class Generator(Unconstrained):
     """
     Generates a deterministic unconstrained problem using the specified, function, gradient and hessian oracles in the framework of this repository.
     """
 
-    def __init__(self, name: str, d: int, x_init : None | np.ndarray, objective : Callable | None = None, gradient : Callable | None = None, hessian: Callable | None = None) -> None:
-
+    def __init__(
+        self,
+        name: str,
+        d: int,
+        x_init: None | np.ndarray,
+        objective: Callable | None = None,
+        gradient: Callable | None = None,
+        hessian: Callable | None = None,
+    ) -> None:
         self.x_init = np.reshape(x_init, (d, 1))
         self.func = objective
         self.grad = gradient
@@ -37,6 +45,7 @@ class Generator(Unconstrained):
         if self.hess == None:
             raise Exception("hessian oracle not available for " + self.name)
         return self.hess(x)
+
 
 class Quadratic(Unconstrained):
 

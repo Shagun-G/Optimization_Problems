@@ -33,11 +33,11 @@ print("Name: " + problem.name)
 print("Dimension : ", problem.d)
 print("At x = ", problem.initial_point())
 print("Function: ", problem.objective(x=problem.initial_point()))
-print("Gradient : ", problem.gradient(x = problem.initial_point()))
-print("Hessian: ", problem.hessian(x = problem.initial_point()))
+print("Gradient : ", problem.gradient(x=problem.initial_point()))
+print("Hessian: ", problem.hessian(x=problem.initial_point()))
 print("------------------------------------------")
 
-'''checking generator'''
+"""checking generator"""
 # from Deterministic_Unconstrained.Synthetic import Generator
 
 # problem_generated = Generator(name=problem.name, d = problem.d, objective=problem.objective, gradient=problem.gradient, x_init=problem.initial_point())
