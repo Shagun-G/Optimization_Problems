@@ -82,7 +82,8 @@ class Quadratic(Unconstrained):
                 raise Exception(f"{type} gradient requires a batch_size > 0")
 
             if batch_size > self._number_of_datapoints:
-                raise Exception("Batch size specified is larger than size of dataset")
+                batch_size = self._number_of_datapoints
+                # raise Exception("Batch size specified is larger than size of dataset")
 
             s = rng.choice(self._number_of_datapoints, size=(batch_size), replace=False)
             return s, batch_size
@@ -90,7 +91,7 @@ class Quadratic(Unconstrained):
         raise Exception(f"{type} is not a defined type of gradient")
 
     def objective(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None) -> float:
-        s = self._determine_batch(type, batch_size, seed)
+        s, batch_size = self._determine_batch(type, batch_size, seed)
         x = x.reshape((self.d, 1))
         val = 0.5 * np.dot(np.dot(x.T, np.sum(self._A_list[:, :, s], axis=2)), x) + np.dot(
             np.sum(self._b_list[:, s], axis=1), x

@@ -108,7 +108,8 @@ class Cross_Entropy_Binary(Unconstrained):
                 raise Exception(f"{type} gradient requires a batch_size > 0")
 
             if batch_size > self._number_of_datapoints:
-                raise Exception("Batch size specified is larger than size of dataset")
+                batch_size = self._number_of_datapoints
+                # raise Exception("Batch size specified is larger than size of dataset")
 
             s = rng.choice(self._number_of_datapoints, size=(batch_size), replace=False)
             return s, batch_size
