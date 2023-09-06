@@ -1,4 +1,4 @@
-from Base_classes import Unconstrained
+from Opt_Problems.Base_classes import Unconstrained
 import numpy as np
 from typing import Callable
 

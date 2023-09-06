@@ -1,8 +1,8 @@
-from Machine_Learning.Logistic_Regression import Cross_Entropy_Binary
+from Opt_Problems.Machine_Learning import Logistic_Regression
 
 # * Cross Entropy logistic regression problems
 
-problem = Cross_Entropy_Binary(name="w8a", location="../Datasets/w8a.txt")
+problem = Logistic_Regression.Cross_Entropy_Binary(name="w8a", location="../Datasets/w8a.txt")
 
 print(problem._targets)
 print(problem._features)

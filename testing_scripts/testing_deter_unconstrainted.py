@@ -1,17 +1,16 @@
 import numpy as np
 
+# import Deterministic_Unconstrained
+from Opt_Problems import Deterministic_Unconstrained
 # * Quadratic Problem
-from Deterministic_Unconstrained.Synthetic import Quadratic
 
 # Specifying
-problem = Quadratic(d=2, c=np.array([1]), b=np.array([[1, -1]]), A=np.ones((2, 2)))
+problem = Deterministic_Unconstrained.Quadratic(d=2, c=np.array([1]), b=np.array([[1, -1]]), A=np.ones((2, 2)))
 # Generating
-problem = Quadratic.generate(d=4, xi=3, seed=100)
+problem = Deterministic_Unconstrained.Quadratic.generate(d=4, xi=3, seed=100)
 
 # * Rosenbrock Problem
-# from Deterministic_Unconstrained.Synthetic import Rosenbrock
-
-# problem = Rosenbrock(d=3)
+# problem = Deterministic_Unconstrained.Rosenbrock(d=3)
 
 # * Beale Problem
 # from Deterministic_Unconstrained.Synthetic import Beale

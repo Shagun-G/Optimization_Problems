@@ -1,9 +1,8 @@
 import numpy as np
+from Opt_Problems import Stochastic_Unconstrained
 
 # * Quadratic Problem
-from Stochastic_Unconstrained.Synthetic import Quadratic
-
-problem = Quadratic(d=2, n_quadratics=10, seed=1000, xi=6)
+problem = Stochastic_Unconstrained.Quadratic(d=2, n_quadratics=10, seed=1000, xi=6)
 
 """Calling all functions"""
 print("Name: " + problem.name)
