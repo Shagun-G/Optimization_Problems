@@ -10,7 +10,7 @@ problem = Deterministic_Unconstrained.Quadratic(d=2, c=np.array([1]), b=np.array
 problem = Deterministic_Unconstrained.Quadratic.generate(d=4, xi=3, seed=100)
 
 # * Rosenbrock Problem
-# problem = Deterministic_Unconstrained.Rosenbrock(d=3)
+problem = Deterministic_Unconstrained.Rosenbrock(d=3)
 
 # * Beale Problem
 # from Deterministic_Unconstrained.Synthetic import Beale
