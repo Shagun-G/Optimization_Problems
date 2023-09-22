@@ -151,7 +151,6 @@ class Rosenbrock(Unconstrained):
         return H
 
 
-# TODO : Hessian implementation
 class Beale(Unconstrained):
     """Defines a Beale function problem."""
 
@@ -177,7 +176,15 @@ class Beale(Unconstrained):
         return grad
 
     def hessian(self, x: np.array) -> np.array:
-        raise Exception("{} hessian not available".format(self.name))
+        
+        H = np.zeros((self._d, self._d))
+
+        for i in range(3):
+            H[0, 0] += 2*(1 - x[1, 0]**(i+1))**2
+            H[1, 0] += 2*(i+1)*x[1, 0]**(i)*(self._data[i] - 2*x[0,0]*(1 - x[1, 0]**(i+1)))
+        H[1, 1] = 2*x[0,0]*(4.5 + 15.75*x[1,0] + x[0,0]*(6*(x[1,0]**2 - x[1,0]) + 15*x[1,0]**4 - 1))
+        H[0, 1] = H[1, 0]
+        return H
 
 
 # TODO : gradient
