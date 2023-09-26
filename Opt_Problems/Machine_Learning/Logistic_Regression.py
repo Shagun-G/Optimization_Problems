@@ -114,7 +114,7 @@ class Cross_Entropy_Binary(Unconstrained):
 
         raise Exception(f"{type} is not a defined type of gradient")
 
-    def objective(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None) -> float:
+    def objective(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> float:
         """
         Calculates loss for full or a stochastic batch of data
         Inputs:
@@ -125,7 +125,12 @@ class Cross_Entropy_Binary(Unconstrained):
         """
         """Evaluates MLE loss"""
 
-        s, batch_size = self._determine_batch(type, batch_size, seed)
+        if data_indices == None:
+            s, batch_size = self._determine_batch(type, batch_size, seed)
+        
+        else:
+            batch_size = len(data_indices)
+            s = np.array(data_indices)
 
         # signmoid calculate
         exp_neg = np.exp(-np.dot(x.T, self._features[:, s])).T
@@ -138,7 +143,7 @@ class Cross_Entropy_Binary(Unconstrained):
         loss[np.isnan(loss)] = 0
         return np.sum(loss)
 
-    def gradient(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None) -> np.ndarray:
+    def gradient(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> np.ndarray:
         """MLE Loss gradient"""
         """
         Calculates gradient of loss for full or a stochastic batch of data
@@ -149,7 +154,12 @@ class Cross_Entropy_Binary(Unconstrained):
         seed        :   (optional) if not specified, random batch, else specify for the same batch of data
         """
 
-        s, batch_size = self._determine_batch(type, batch_size, seed)
+        if data_indices == None:
+            s, batch_size = self._determine_batch(type, batch_size, seed)
+        else:
+            batch_size = len(data_indices)
+            s = np.array(data_indices)
+
         x = x.reshape((self._number_of_features, 1))
 
         """Non sparse calculation"""

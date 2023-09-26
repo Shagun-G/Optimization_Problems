@@ -1,1 +1,1 @@
-from .Base_classes import Unconstrained
+from .Base_classes import Unconstrained, Constrained

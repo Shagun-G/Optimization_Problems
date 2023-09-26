@@ -1,0 +1,1 @@
+from .Synthetic import Generator
