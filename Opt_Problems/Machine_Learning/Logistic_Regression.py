@@ -45,6 +45,12 @@ class Cross_Entropy_Binary(Unconstrained):
         elif name.lower() == "w8a":
             # the target has to be changed from {-1, +1} to {0, 1}
             y[y == -1] = 0
+        elif "ijcnn" in name.lower():
+            # the target has to be changed from {-1, +1} to {0, 1}
+            y[y == -1] = 0
+        elif "real-sim" in name.lower():
+            # the target has to be changed from {-1, +1} to {0, 1}
+            y[y == -1] = 0
         else:
             raise Exception("Unknown dataset, preprocessing might be required for correct format")
 
