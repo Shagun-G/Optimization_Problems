@@ -65,9 +65,11 @@ class Constrained(ABC):
     d       :   Dimension of the problem
     """
 
-    def __init__(self, name: str, d: int) -> None:
+    def __init__(self, name: str, d: int, eq_const_number: int = 0, ineq_const_number : int = 0) -> None:
         self._name = name
         self._d = d
+        self._number_of_eq_constraints = eq_const_number
+        self._number_of_ineq_constraints = ineq_const_number
 
     @property
     def name(self) -> str:
@@ -76,6 +78,14 @@ class Constrained(ABC):
     @property
     def d(self) -> int:
         return self._d
+
+    @property
+    def number_of_eq_constraints(self) -> int:
+        return self._number_of_eq_constraints
+
+    @property
+    def number_of_ineq_constraints(self) -> int:
+        return self._number_of_ineq_constraints
 
     @abstractmethod
     def initial_point(self) -> np.array:
