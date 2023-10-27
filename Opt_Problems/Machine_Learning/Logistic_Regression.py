@@ -1,5 +1,6 @@
 import numpy as np
 from Opt_Problems.Base_classes import Unconstrained
+from Opt_Problems.utils import datasets_manager
 
 class Cross_Entropy_Binary(Unconstrained):
     def __init__(self, location: str, name: str):
@@ -20,44 +21,45 @@ class Cross_Entropy_Binary(Unconstrained):
 
         self._number_of_classes = 2
 
-        X, y = load_svmlight_file(location)
+        # X, y = load_svmlight_file(location)
 
-        # preprocessing for specific datasets
+        # # preprocessing for specific datasets
 
-        if name.lower() == "mushroom":
-            # the target variable needs to be offset
-            y = y - 1
-        elif name.lower() == "australian":
-            # the target has to be changed from {-1, +1} to {0, 1}
-            y[y == -1] = 0
-        elif name.lower() == "phishing":
-            # no formatting required, {0,1} labels
-            pass
-        elif name.lower() == "sonar":
-            # the target has to be changed from {-1, +1} to {0, 1}
-            y[y == -1] = 0
-        elif name.lower() == "gisette":
-            # the target has to be changed from {-1, +1} to {0, 1}
-            y[y == -1] = 0
-        elif name.lower() == "a9a":
-            # the target has to be changed from {-1, +1} to {0, 1}
-            y[y == -1] = 0
-        elif name.lower() == "w8a":
-            # the target has to be changed from {-1, +1} to {0, 1}
-            y[y == -1] = 0
-        elif "ijcnn" in name.lower():
-            # the target has to be changed from {-1, +1} to {0, 1}
-            y[y == -1] = 0
-        elif "real-sim" in name.lower():
-            # the target has to be changed from {-1, +1} to {0, 1}
-            y[y == -1] = 0
-        else:
-            raise Exception("Unknown dataset, preprocessing might be required for correct format")
+        # if name.lower() == "mushroom":
+        #     # the target variable needs to be offset
+        #     y = y - 1
+        # elif name.lower() == "australian":
+        #     # the target has to be changed from {-1, +1} to {0, 1}
+        #     y[y == -1] = 0
+        # elif name.lower() == "phishing":
+        #     # no formatting required, {0,1} labels
+        #     pass
+        # elif name.lower() == "sonar":
+        #     # the target has to be changed from {-1, +1} to {0, 1}
+        #     y[y == -1] = 0
+        # elif name.lower() == "gisette":
+        #     # the target has to be changed from {-1, +1} to {0, 1}
+        #     y[y == -1] = 0
+        # elif name.lower() == "a9a":
+        #     # the target has to be changed from {-1, +1} to {0, 1}
+        #     y[y == -1] = 0
+        # elif name.lower() == "w8a":
+        #     # the target has to be changed from {-1, +1} to {0, 1}
+        #     y[y == -1] = 0
+        # elif "ijcnn" in name.lower():
+        #     # the target has to be changed from {-1, +1} to {0, 1}
+        #     y[y == -1] = 0
+        # elif "real-sim" in name.lower():
+        #     # the target has to be changed from {-1, +1} to {0, 1}
+        #     y[y == -1] = 0
+        # else:
+        #     raise Exception("Unknown dataset, preprocessing might be required for correct format")
 
-        if name not in location:
-            raise Exception("Name and file pointed to in location are different")
+        # if name not in location:
+        #     raise Exception("Name and file pointed to in location are different")
 
         self._dataset_name = name
+        X, y = datasets_manager(name=name, location=location)
         self._number_of_datapoints, self._number_of_features = np.shape(X)
         y = y.reshape((self._number_of_datapoints, 1))  # reshaping target matrix
         # adding bias term to features
