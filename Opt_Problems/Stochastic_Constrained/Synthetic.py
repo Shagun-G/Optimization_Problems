@@ -1,9 +1,9 @@
-from Opt_Problems.Base_classes import Constrained
+from Opt_Problems.utils import Problem
 import numpy as np
 from typing import Callable
 
 
-class Generator(Constrained):
+class Generator(Problem):
     """
     Generates a deterministic unconstrained problem using the specified, function, gradient and hessian oracles in the framework of this repository.
     """
@@ -45,15 +45,11 @@ class Generator(Constrained):
                 raise Exception("Need specifications of the inquality constraints")
 
         if number_of_datapoints is None:
-            self._number_of_datapoints = float('inf')
+            self._number_of_datapoints = 1
         else:
             self._number_of_datapoints = number_of_datapoints
         
-        super().__init__(name = name, d = d, eq_const_number=number_of_eq_constraints, ineq_const_number=number_of_ineq_constraints)
-
-    @property
-    def number_of_datapoints(self) -> int:
-        return self._number_of_datapoints
+        super().__init__(name = name, d = d, eq_const_number=number_of_eq_constraints, ineq_const_number=number_of_ineq_constraints, number_of_datapoints=number_of_datapoints)
 
     def initial_point(self) -> np.array:
         if self.x_init.any() == None:
@@ -75,85 +71,22 @@ class Generator(Constrained):
             raise Exception("hessian oracle not available for " + self.name)
         return self.hess(x, type, batch_size, seed)
 
-    def constraints_equality(self, x: np.array) -> np.array:
+    def constraints_eq(self, x: np.array) -> np.array:
         if self.eq_const == None:
             raise Exception("eq constraint oracle not available for " + self.name)
         return self.eq_const(x)
 
-    def constraints_inequality(self, x: np.array) -> np.array:
+    def constraints_ineq(self, x: np.array) -> np.array:
         if self.ineq_const == None:
             raise Exception("ineq constraint oracle not available for " + self.name)
         return self.ineq_const(x)
 
-    def constraints_equality_jacobian(self, x: np.array) -> np.array:
+    def constraints_eq_jacobian(self, x: np.array) -> np.array:
         if self.eq_const == None:
             raise Exception("eq constraint jacobian oracle not available for " + self.name)
         return self.eq_jacobian(x)
 
-    def constraints_inequality_jacobian(self, x: np.array) -> np.array:
+    def constraints_ineq_jacobian(self, x: np.array) -> np.array:
         if self.ineq_const == None:
             raise Exception("ineq constraint jacobian oracle not available for " + self.name)
         return self.ineq_jacobian(x)
-
-# TODO : Add constraint specifying or generating ability
-# class Quadratic(Constrained):
-
-#     """
-#     Generates a quadratic function with the specified constraints:
-#     """
-
-#     def __init__(self, d: int, A: np.array, b: np.array, c: np.array):
-#         """
-#         Inputs :
-#         A   :   matrix for quadratic
-#         b   :   linear term for quadratic
-#         c   :   constant term for wuadratic
-#         d   :   dimension of problem
-#         """
-#         self._A = A
-#         self._b = b.reshape(d, 1)
-#         self._c = c.reshape(1, 1)
-#         super().__init__("Quadratic", d)
-
-#     def initial_point(self) -> np.array:
-#         return np.zeros((self._d, 1))
-
-#     def objective(self, x: np.array) -> float:
-#         val = self._c + np.dot(x.T, self._b) + 0.5 * np.dot(np.dot(x.T, self._A), x)
-#         return val[0, 0]
-
-#     def gradient(self, x: np.array) -> np.array:
-#         return self._b + np.dot(self._A, x)
-
-#     def hessian(self, x: np.array) -> np.array:
-#         return self._A
-
-#     @classmethod
-#     def generate(cls, d: int, seed: int | None = None, xi: int = 2):
-#         """Generates a quadratic based on the process in Numerical Experiments in:
-#         A. Mokhtari, Q. Ling and A. Ribeiro, "Network Newton Distributed Optimization Methods," in IEEE Transactions on Signal Processing, vol. 65, no. 1, pp. 146-161, 1 Jan.1, 2017, doi: 10.1109/TSP.2016.2617829.
-
-#         Inputs:
-
-#         seed    :   seed for sampling (optional)
-#         xi      :   constrols condition number, increase to increase conditon number
-#                     (optional, default 2)
-#         """
-
-#         # random generator to avoid setting global generator
-#         if seed is None:
-#             rng = np.random.default_rng(np.random.randint(np.iinfo(np.int16).max, size=1)[0])
-#         elif isinstance(seed, int):
-#             rng = np.random.default_rng(seed)
-#         else:
-#             raise Exception("seed must be an enteger if specified")
-
-#         s1 = 10 ** np.arange(xi)
-#         s2 = 1 / 10 ** np.arange(xi)
-#         if d % 2 == 0:
-#             v = np.hstack((rng.choice(s1, size=int(d / 2)), rng.choice(s2, size=int(d / 2))))
-#         else:
-#             v = np.hstack((rng.choice(s1, size=int(d / 2) + 1), rng.choice(s2, size=int(d / 2))))
-#         b = rng.random((d)) * 10 ** (int(xi / 2))
-#         # print("Condition number : ", np.linalg.cond(A))
-#         return cls(d=d, A=np.diag(v), b=b, c=np.array([0]))

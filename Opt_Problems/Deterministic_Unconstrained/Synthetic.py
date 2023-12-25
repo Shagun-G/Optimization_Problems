@@ -1,9 +1,9 @@
-from Opt_Problems.Base_classes import Unconstrained
+from Opt_Problems.utils import Unconstrained_Problem
 import numpy as np
 from typing import Callable
 
 
-class Generator(Unconstrained):
+class Generator(Unconstrained_Problem):
     """
     Generates a deterministic unconstrained problem using the specified, function, gradient and hessian oracles in the framework of this repository.
     """
@@ -47,7 +47,7 @@ class Generator(Unconstrained):
         return self.hess(x)
 
 
-class Quadratic(Unconstrained):
+class Quadratic(Unconstrained_Problem):
 
     """
     Generates a quadratic function:
@@ -110,7 +110,7 @@ class Quadratic(Unconstrained):
         return cls(d=d, A=np.diag(v), b=b, c=np.array([0]))
 
 
-class Rosenbrock(Unconstrained):
+class Rosenbrock(Unconstrained_Problem):
     """Defines a rosenbrock function problem."""
 
     def __init__(self, d: int):
@@ -151,7 +151,7 @@ class Rosenbrock(Unconstrained):
         return H
 
 
-class Beale(Unconstrained):
+class Beale(Unconstrained_Problem):
     """Defines a Beale function problem."""
 
     def __init__(self):
@@ -189,7 +189,7 @@ class Beale(Unconstrained):
 
 # TODO : gradient
 # TODO : hessian
-class Branin(Unconstrained):
+class Branin(Unconstrained_Problem):
     """Defines a Branin function problem."""
 
     def __init__(self):
@@ -220,7 +220,7 @@ class Branin(Unconstrained):
 
 # TODO : gradient
 # TODO : hessian
-class hump_camel(Unconstrained):
+class hump_camel(Unconstrained_Problem):
     """Defines a 6 Hump Camel function problem."""
 
     def __init__(self):

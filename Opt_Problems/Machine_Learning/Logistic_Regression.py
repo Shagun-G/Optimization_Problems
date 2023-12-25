@@ -1,8 +1,7 @@
 import numpy as np
-from Opt_Problems.Base_classes import Unconstrained
-from Opt_Problems.utils import datasets_manager
+from Opt_Problems.utils import datasets_manager, Unconstrained_Problem
 
-class Cross_Entropy_Binary(Unconstrained):
+class Cross_Entropy_Binary(Unconstrained_Problem):
     def __init__(self, location: str, name: str):
         from sklearn.datasets import load_svmlight_file
         """
@@ -20,55 +19,16 @@ class Cross_Entropy_Binary(Unconstrained):
         """
 
         self._number_of_classes = 2
-
-        # X, y = load_svmlight_file(location)
-
-        # # preprocessing for specific datasets
-
-        # if name.lower() == "mushroom":
-        #     # the target variable needs to be offset
-        #     y = y - 1
-        # elif name.lower() == "australian":
-        #     # the target has to be changed from {-1, +1} to {0, 1}
-        #     y[y == -1] = 0
-        # elif name.lower() == "phishing":
-        #     # no formatting required, {0,1} labels
-        #     pass
-        # elif name.lower() == "sonar":
-        #     # the target has to be changed from {-1, +1} to {0, 1}
-        #     y[y == -1] = 0
-        # elif name.lower() == "gisette":
-        #     # the target has to be changed from {-1, +1} to {0, 1}
-        #     y[y == -1] = 0
-        # elif name.lower() == "a9a":
-        #     # the target has to be changed from {-1, +1} to {0, 1}
-        #     y[y == -1] = 0
-        # elif name.lower() == "w8a":
-        #     # the target has to be changed from {-1, +1} to {0, 1}
-        #     y[y == -1] = 0
-        # elif "ijcnn" in name.lower():
-        #     # the target has to be changed from {-1, +1} to {0, 1}
-        #     y[y == -1] = 0
-        # elif "real-sim" in name.lower():
-        #     # the target has to be changed from {-1, +1} to {0, 1}
-        #     y[y == -1] = 0
-        # else:
-        #     raise Exception("Unknown dataset, preprocessing might be required for correct format")
-
-        # if name not in location:
-        #     raise Exception("Name and file pointed to in location are different")
-
         self._dataset_name = name
         X, y = datasets_manager(name=name, location=location)
-        self._number_of_datapoints, self._number_of_features = np.shape(X)
+        number_of_datapoints, self._number_of_features = np.shape(X)
         y = y.reshape((self._number_of_datapoints, 1))  # reshaping target matrix
-        # adding bias term to features
-        X = np.vstack((X.toarray().T, np.ones((1, self._number_of_datapoints))))
+        X = np.vstack((X.toarray().T, np.ones((1, self._number_of_datapoints))))  # adding bias term to features
 
         self._number_of_features += 1
         self._features = X
         self._targets = y
-        super().__init__(name=f"{name}_cross_entropy_logistic", d=self._number_of_features)
+        super().__init__(name=f"{name}_cross_entropy_logistic", d=self._number_of_features, number_of_datapoints=number_of_datapoints)
 
     def initial_point(self) -> np.ndarray:
         return np.zeros([self._number_of_features, 1])
@@ -76,10 +36,6 @@ class Cross_Entropy_Binary(Unconstrained):
     @property
     def dataset_name(self) -> str:
         return self._dataset_name
-
-    @property
-    def number_of_datapoints(self) -> int:
-        return self._number_of_datapoints
 
     @property
     def number_of_classes(self) -> int:
@@ -189,7 +145,7 @@ class Cross_Entropy_Binary(Unconstrained):
 # TODO : objective calculation
 # TODO : gradient calculation
 # TODO : Function descriptions update
-class Cross_Entropy_Multiclass(Unconstrained):
+class Cross_Entropy_Multiclass(Unconstrained_Problem):
     pass
     # def __init__(self, location: str, name: str):
     #     """
