@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.core.multiarray import array as array
 from sklearn.datasets import load_svmlight_file
 from abc import ABC, abstractmethod
 import numpy as np
@@ -75,25 +76,34 @@ class Problem(ABC):
         pass
 
     @abstractmethod
-    def constraints_eq(self, x: np.array) -> float:
-        """return equality constrainst value"""
+    def constraints_eq(self, x: np.array) -> np.array:
+        """return equality constrainst value (m_eq, 1)"""
         pass
 
     @abstractmethod
-    def constraints_eq_jacobian(self, x: np.array) -> float:
-        """return equality constrainsts jacobian matrix value"""
+    def constraints_eq_jacobian(self, x: np.array) -> np.array:
+        """return equality constrainsts jacobian matrix value (m_eq, n)"""
         pass
 
     @abstractmethod
-    def constraints_ineq(self, x: np.array) -> float:
-        """return inequality constrainst value"""
+    def constraints_eq_hessian(self, x: np.array) -> np.array:
+        """return equality constrainsts hessian tensor value (m_eq, n, n)"""
         pass
 
     @abstractmethod
-    def constraints_ineq_jacobian(self, x: np.array) -> float:
-        """return inequality constrainst jacobian matrix value"""
+    def constraints_ineq(self, x: np.array) -> np.array:
+        """return inequality constrainst value (m_ineq, 1)"""
         pass
 
+    @abstractmethod
+    def constraints_ineq_jacobian(self, x: np.array) -> np.array:
+        """return inequality constrainst jacobian matrix value (m_ineq, n)"""
+        pass
+
+    @abstractmethod
+    def constraints_ineq_hessian(self, x: np.array) -> np.array:
+        """return inequality constrainst jacobian matrix value (m_ineq, n, n)"""
+        pass
 
 class Unconstrained_Problem(Problem, ABC):
 
@@ -140,19 +150,23 @@ class Unconstrained_Problem(Problem, ABC):
         pass
 
     '''The constraints below don't exist and thus return errors'''
-    def constraints_eq(self, x: np.array) -> float:
+    def constraints_eq(self, x: np.array):
         raise Exception("No Equality Constraints")
 
-    def constraints_eq_jacobian(self, x: np.array) -> float:
+    def constraints_eq_jacobian(self, x: np.array):
         raise Exception("No Equality Constraints")
 
-    def constraints_ineq(self, x: np.array) -> float:
+    def constraints_eq_hessian(self, x: np.array):
+        raise Exception("No Equality Constraints")
+
+    def constraints_ineq(self, x: np.array):
         raise Exception("No Inequality Constraints")
 
-    def constraints_ineq_jacobian(self, x: np.array) -> float:
+    def constraints_ineq_jacobian(self, x: np.array):
         raise Exception("No Inequality Constraints")
 
-
+    def constraints_ineq_hessian(self, x: np.array):
+        raise Exception("No Inequality Constraints")
 
 def datasets_manager(name, location):
     X, y = load_svmlight_file(location)

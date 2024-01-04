@@ -22,8 +22,8 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
         self._dataset_name = name
         X, y = datasets_manager(name=name, location=location)
         number_of_datapoints, self._number_of_features = np.shape(X)
-        y = y.reshape((self._number_of_datapoints, 1))  # reshaping target matrix
-        X = np.vstack((X.toarray().T, np.ones((1, self._number_of_datapoints))))  # adding bias term to features
+        y = y.reshape((number_of_datapoints, 1))  # reshaping target matrix
+        X = np.vstack((X.toarray().T, np.ones((1, number_of_datapoints))))  # adding bias term to features
 
         self._number_of_features += 1
         self._features = X
@@ -136,7 +136,7 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
 
         return g.reshape((self._number_of_features, 1))
 
-    def hessian(self, x: np.array) -> np.array:
+    def hessian(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> np.array:
         raise Exception(f"Can't compute hessian for {self.name}")
 
 
