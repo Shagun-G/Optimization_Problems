@@ -87,28 +87,28 @@ class Generator(Problem):
         return self.ineq_const(x)
 
     def constraints_eq_jacobian(self, x: np.array) -> np.array:
-        if self.eq_const == None:
+        if self.eq_jacobian == None:
             raise Exception(
                 "eq constraint jacobian oracle not available for " + self.name
             )
         return self.eq_jacobian(x)
 
     def constraints_ineq_jacobian(self, x: np.array) -> np.array:
-        if self.ineq_const == None:
+        if self.ineq_jacobian == None:
             raise Exception(
                 "ineq constraint jacobian oracle not available for " + self.name
             )
         return self.ineq_jacobian(x)
 
     def constraints_eq_hessian(self, x: np.array) -> np.array:
-        if self.eq_const == None:
+        if self.eq_hessian == None:
             raise Exception(
                 "eq constraint hessian oracle not available for " + self.name
             )
         return self.eq_hessian(x)
 
     def constraints_ineq_hessian(self, x: np.array) -> np.array:
-        if self.ineq_const == None:
+        if self.ineq_hessian == None:
             raise Exception(
                 "ineq constraint hessian oracle not available for " + self.name
             )

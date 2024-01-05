@@ -18,8 +18,10 @@ class Generator(Problem):
         hessian: Callable | None = None,
         equality: Callable | None = None,
         equality_jacobian: Callable | None = None,
+        equality_hessian: Callable | None = None,
         inequality: Callable | None = None,
         inequality_jacobian: Callable | None = None,
+        inequality_hessian: Callable | None = None,
         number_of_eq_constraints:int = 0,
         number_of_ineq_constraints:int = 0,
         number_of_datapoints: int | None = None
@@ -33,15 +35,17 @@ class Generator(Problem):
 
         self.eq_const = equality
         self.eq_jacobian = equality_jacobian
+        self.eq_hessian = equality_hessian
         self.ineq_const = inequality
         self.ineq_jacobian = inequality_jacobian
+        self.ineq_hessian = inequality_hessian
 
         if number_of_eq_constraints > 0:
-            if equality == None and equality_jacobian == None:
+            if equality == None and equality_jacobian == None and equality_hessian == None:
                 raise Exception("Need specifications of the equality constraints")
 
         if number_of_ineq_constraints > 0:
-            if inequality == None and inequality_jacobian == None:
+            if inequality == None and inequality_jacobian == None and equality_hessian == None:
                 raise Exception("Need specifications of the inquality constraints")
 
         if number_of_datapoints is None:
@@ -82,11 +86,21 @@ class Generator(Problem):
         return self.ineq_const(x)
 
     def constraints_eq_jacobian(self, x: np.array) -> np.array:
-        if self.eq_const == None:
+        if self.eq_jacobian == None:
             raise Exception("eq constraint jacobian oracle not available for " + self.name)
         return self.eq_jacobian(x)
 
     def constraints_ineq_jacobian(self, x: np.array) -> np.array:
-        if self.ineq_const == None:
+        if self.ineq_jacobian == None:
             raise Exception("ineq constraint jacobian oracle not available for " + self.name)
         return self.ineq_jacobian(x)
+
+    def constraints_eq_hessian(self, x: np.array) -> np.array:
+        if self.eq_hessian == None:
+            raise Exception("eq constraint hessian oracle not available for " + self.name)
+        return self.eq_hessian(x)
+
+    def constraints_ineq_hessian(self, x: np.array) -> np.array:
+        if self.ineq_hessian == None:
+            raise Exception("ineq constraint hessian oracle not available for " + self.name)
+        return self.ineq_hessian(x)
