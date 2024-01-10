@@ -1,6 +1,8 @@
 import numpy as np
 import pycutest
 
+'''Testing CUTEST Constrained'''
+print("----------------------------------------------------")
 p = pycutest.import_problem('BT9')
 
 print(p.name)
@@ -26,9 +28,10 @@ print(g)
 print(p.ihess(x, cons_index=0))
 print(p.ihess(x, cons_index=1))
 
-from Opt_Problems.CUTEST import CUTEST_problem
+from Opt_Problems.CUTEST.CUTEST_deterministic import CUTEST_constrained
 
-problem = CUTEST_problem(name="BT9")
+print("----------------------------------------------------")
+problem = CUTEST_constrained(name="BT9")
 print(problem.name)
 print(problem.d)
 print(problem.number_of_eq_constraints)
@@ -43,3 +46,28 @@ print(problem.constraints_eq_jacobian(problem.initial_point()))
 print(problem.constraints_ineq_jacobian(problem.initial_point()))
 print(problem.constraints_eq_hessian(problem.initial_point()))
 print(problem.constraints_ineq_hessian(problem.initial_point()))
+
+'''Testing CUTEST Unconstrained'''
+print("----------------------------------------------------")
+p = pycutest.import_problem('ROSENBR')
+
+print(p.name)
+print(p.n)
+
+x = p.x0
+f, g = p.obj(x, gradient=True)  
+print(f)
+print(g)
+g = p.ihess(x)
+print(g)
+
+from Opt_Problems.CUTEST.CUTEST_deterministic import CUTEST_unconstrained
+
+print("----------------------------------------------------")
+problem = CUTEST_unconstrained(name="ROSENBR")
+print(problem.name)
+print(problem.d)
+print(problem.initial_point())
+print(problem.objective(problem.initial_point()))
+print(problem.gradient(problem.initial_point()))
+print(problem.hessian(problem.initial_point()))

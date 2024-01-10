@@ -31,7 +31,7 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
         super().__init__(name=f"{name}_cross_entropy_logistic", d=self._number_of_features, number_of_datapoints=number_of_datapoints)
 
     def initial_point(self) -> np.ndarray:
-        return np.zeros([self._number_of_features, 1])
+        return np.ones((self.d, 1))
 
     @property
     def dataset_name(self) -> str:

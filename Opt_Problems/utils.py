@@ -119,14 +119,10 @@ class Unconstrained_Problem(Problem, ABC):
         self,
         name: str,
         d: int,
-        eq_const_number: int = 0,
-        ineq_const_number: int = 0,
         number_of_datapoints: int = 1,
     ) -> None:
         self._name = name
         self._d = d
-        self._number_of_eq_constraints = eq_const_number
-        self._number_of_ineq_constraints = ineq_const_number
         self._number_of_datapoints = number_of_datapoints
 
     @abstractmethod
