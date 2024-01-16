@@ -3,7 +3,6 @@ from Opt_Problems.utils import datasets_manager, Unconstrained_Problem
 
 class Cross_Entropy_Binary(Unconstrained_Problem):
     def __init__(self, location: str, name: str):
-        from sklearn.datasets import load_svmlight_file
         """
         # regularization with #datapoints
         Inputs:
