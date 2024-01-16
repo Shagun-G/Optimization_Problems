@@ -24,7 +24,7 @@ class Cross_Entropy_Binary_Linear_norm_constraint(Problem):
         self._dataset_name = name
         self.logistic_function = Cross_Entropy_Binary(location=location, name=name)
 
-        super().__init__(name=f"{name}_cross_entropy_logistic", d=self.logistic_function.d, number_of_datapoints=self.logistic_function.number_of_datapoints, eq_const_number=m+1, ineq_const_number=0)
+        super().__init__(name=f"{name}_cross_entropy_logistic_linear_norm_constraint", d=self.logistic_function.d, number_of_datapoints=self.logistic_function.number_of_datapoints, eq_const_number=m+1, ineq_const_number=0)
 
         """Generating Constraints"""
         if constraint_seed is None:
@@ -106,7 +106,7 @@ class Cross_Entropy_Binary_Linear_constraint(Problem):
         self._dataset_name = name
         self.logistic_function = Cross_Entropy_Binary(location=location, name=name)
 
-        super().__init__(name=f"{name}_cross_entropy_logistic", d=self.logistic_function.d, number_of_datapoints=self.logistic_function.number_of_datapoints, eq_const_number=m, ineq_const_number=0)
+        super().__init__(name=f"{name}_cross_entropy_logistic_linear_constraint", d=self.logistic_function.d, number_of_datapoints=self.logistic_function.number_of_datapoints, eq_const_number=m, ineq_const_number=0)
 
         """Generating Constraints"""
         if constraint_seed is None:
@@ -186,7 +186,7 @@ class Cross_Entropy_Binary_norm_constraint(Problem):
         self._dataset_name = name
         self.logistic_function = Cross_Entropy_Binary(location=location, name=name)
 
-        super().__init__(name=f"{name}_cross_entropy_logistic", d=self.logistic_function.d, number_of_datapoints=self.logistic_function.number_of_datapoints, eq_const_number=1, ineq_const_number=0)
+        super().__init__(name=f"{name}_cross_entropy_logistic_norm_constraint", d=self.logistic_function.d, number_of_datapoints=self.logistic_function.number_of_datapoints, eq_const_number=1, ineq_const_number=0)
 
         self._b_2 = b_2
 

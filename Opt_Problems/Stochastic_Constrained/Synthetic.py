@@ -181,7 +181,7 @@ class Quadratic_linear_constraints(Problem):
 
         self.objective_function = Quadratic(d = d, n_quadratics=n_quadratics, seed=seed, xi=xi)
 
-        super().__init__(name=f"{self.objective_function.name}_linear_norm_constraint", d=self.objective_function.d, number_of_datapoints=n_quadratics, eq_const_number=m, ineq_const_number=0)
+        super().__init__(name=f"{self.objective_function.name}_linear_constraint", d=self.objective_function.d, number_of_datapoints=n_quadratics, eq_const_number=m, ineq_const_number=0)
 
         """Generating Constraints"""
         if seed is None:
@@ -239,7 +239,7 @@ class Quadratic_norm_constraints(Problem):
 
         self.objective_function = Quadratic(d = d, n_quadratics=n_quadratics, seed=seed, xi=xi)
 
-        super().__init__(name=f"{self.objective_function.name}_linear_norm_constraint", d=self.objective_function.d, number_of_datapoints=n_quadratics, eq_const_number=1, ineq_const_number=0)
+        super().__init__(name=f"{self.objective_function.name}_norm_constraint", d=self.objective_function.d, number_of_datapoints=n_quadratics, eq_const_number=1, ineq_const_number=0)
 
         """Generating Constraints"""
         if seed is None:
