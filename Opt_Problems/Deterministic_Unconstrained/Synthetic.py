@@ -12,7 +12,7 @@ class Generator(Unconstrained_Problem):
         self,
         name: str,
         d: int,
-        x_init: None | np.ndarray,
+        x_init: None | np.ndarray = None,
         objective: Callable | None = None,
         gradient: Callable | None = None,
         hessian: Callable | None = None,

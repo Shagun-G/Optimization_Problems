@@ -167,7 +167,6 @@ class Quadratic_linear_norm_constraints(Problem):
     def constraints_ineq_hessian(self, x: np.array) -> np.array:
         raise Exception("No inequality constraints")
 
-
 class Quadratic_linear_constraints(Problem):
 
     """Creates a synthetic dataset of strongly convex quadratics from the Synthetic Stochastic Unconstrained and adds 2 constraints
@@ -226,7 +225,6 @@ class Quadratic_linear_constraints(Problem):
     
     def constraints_ineq_hessian(self, x: np.array) -> np.array:
         raise Exception("No inequality constraints")
-
 
 class Quadratic_norm_constraints(Problem):
 

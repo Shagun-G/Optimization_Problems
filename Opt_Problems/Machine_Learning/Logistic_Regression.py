@@ -1,5 +1,7 @@
 import numpy as np
 from Opt_Problems.utils import datasets_manager, Unconstrained_Problem
+from scipy.special import expit
+
 
 class Cross_Entropy_Binary(Unconstrained_Problem):
     def __init__(self, location: str, name: str):
@@ -22,12 +24,18 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
         X, y = datasets_manager(name=name, location=location)
         number_of_datapoints, self._number_of_features = np.shape(X)
         y = y.reshape((number_of_datapoints, 1))  # reshaping target matrix
-        X = np.vstack((X.toarray().T, np.ones((1, number_of_datapoints))))  # adding bias term to features
+        X = np.vstack(
+            (X.toarray().T, np.ones((1, number_of_datapoints)))
+        )  # adding bias term to features
 
         self._number_of_features += 1
         self._features = X
         self._targets = y
-        super().__init__(name=f"{name}_cross_entropy_logistic", d=self._number_of_features, number_of_datapoints=number_of_datapoints)
+        super().__init__(
+            name=f"{name}_cross_entropy_logistic",
+            d=self._number_of_features,
+            number_of_datapoints=number_of_datapoints,
+        )
 
     def initial_point(self) -> np.ndarray:
         return np.ones((self.d, 1))
@@ -44,7 +52,9 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
     def number_of_features(self) -> int:
         return self._number_of_features
 
-    def _determine_batch(self, type: str, batch_size: int = 0, seed: int | None = None) -> np.array:
+    def _determine_batch(
+        self, type: str, batch_size: int = 0, seed: int | None = None
+    ) -> np.array:
         """
         Generates an array of indices for a batch of data for calculation
         Inputs:
@@ -59,7 +69,9 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
 
         if type == "stochastic":
             if seed is None:
-                rng = np.random.default_rng(np.random.randint(np.iinfo(np.int16).max, size=1)[0])
+                rng = np.random.default_rng(
+                    np.random.randint(np.iinfo(np.int16).max, size=1)[0]
+                )
             elif isinstance(seed, int):
                 rng = np.random.default_rng(seed)
             else:
@@ -77,7 +89,14 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
 
         raise Exception(f"{type} is not a defined type of gradient")
 
-    def objective(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> float:
+    def objective(
+        self,
+        x: np.array,
+        type: str,
+        batch_size: int = 0,
+        seed: int | None = None,
+        data_indices: list | None = None,
+    ) -> float:
         """
         Calculates loss for full or a stochastic batch of data
         Inputs:
@@ -90,7 +109,6 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
 
         if data_indices == None:
             s, batch_size = self._determine_batch(type, batch_size, seed)
-        
         else:
             batch_size = len(data_indices)
             s = np.array(data_indices)
@@ -100,13 +118,23 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
         y_hat = 1 / (1 + exp_neg)
 
         # cross entropy loss
-        loss = -(self._targets[s, :] * np.log(y_hat) + (1 - self._targets[s, :]) * np.log(1 - y_hat))
+        loss = -(
+            self._targets[s, :] * np.log(y_hat)
+            + (1 - self._targets[s, :]) * np.log(1 - y_hat)
+        )
 
         # replace nan with 0 to for 0*log(0) values
         loss[np.isnan(loss)] = 0
-        return np.sum(loss)
+        return np.mean(loss) + np.linalg.norm(x)**2/self.number_of_datapoints
 
-    def gradient(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> np.ndarray:
+    def gradient(
+        self,
+        x: np.array,
+        type: str,
+        batch_size: int = 0,
+        seed: int | None = None,
+        data_indices: list | None = None,
+    ) -> np.ndarray:
         """MLE Loss gradient"""
         """
         Calculates gradient of loss for full or a stochastic batch of data
@@ -135,7 +163,14 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
 
         return g.reshape((self._number_of_features, 1))
 
-    def hessian(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> np.array:
+    def hessian(
+        self,
+        x: np.array,
+        type: str,
+        batch_size: int = 0,
+        seed: int | None = None,
+        data_indices: list | None = None,
+    ) -> np.array:
         raise Exception(f"Can't compute hessian for {self.name}")
 
 

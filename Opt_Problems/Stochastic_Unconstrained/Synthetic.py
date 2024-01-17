@@ -103,6 +103,11 @@ class Quadratic(Unconstrained_Problem):
     def objective(
         self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None
     ) -> float:
+
+        if type == "full":
+            val = 0.5*np.dot(x.T, np.dot(self._A_sum, x)) + np.dot(x.T, self._b_sum)
+            return val.squeeze()
+
         s, batch_size = self._determine_batch(type, batch_size, seed)
         x = x.reshape((self.d, 1))
         val = 0.5 * np.dot(
@@ -114,6 +119,10 @@ class Quadratic(Unconstrained_Problem):
     def gradient(
         self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None
     ) -> np.array:
+
+        if type == "full":
+            return np.dot(self._A_sum, x) + self._b_sum
+
         s, batch_size = self._determine_batch(type, batch_size, seed)
         x = x.reshape((self.d, 1))
         val = np.dot(np.sum(self._A_list[:, :, s], axis=2), x) + np.sum(
