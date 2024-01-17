@@ -58,7 +58,7 @@ class Quadratic(Unconstrained_Problem):
         self._b_sum = np.sum(self._b_list, axis=1).reshape((d, 1))
         print("Condition number : ", np.linalg.cond(self._A_sum))
 
-        super().__init__("Stochastic Quadratic", d, number_of_datapoints=n_quadratics)
+        super().__init__("Stochastic_Quadratic", d, number_of_datapoints=n_quadratics)
 
     def initial_point(self) -> np.array:
         return np.ones((self.d, 1))
