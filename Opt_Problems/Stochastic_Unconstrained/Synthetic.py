@@ -104,24 +104,17 @@ class Quadratic(Unconstrained_Problem):
         self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None
     ) -> float:
 
-        if type == "full":
-            val = 0.5*np.dot(x.T, np.dot(self._A_sum, x)) + np.dot(x.T, self._b_sum)
-            return val.squeeze()
-
         s, batch_size = self._determine_batch(type, batch_size, seed)
         x = x.reshape((self.d, 1))
         val = 0.5 * np.dot(
             np.dot(x.T, np.sum(self._A_list[:, :, s], axis=2)), x
         ) + np.dot(np.sum(self._b_list[:, s], axis=1), x)
 
-        return val[0, 0]
+        return val[0, 0]/batch_size
 
     def gradient(
         self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None
     ) -> np.array:
-
-        if type == "full":
-            return np.dot(self._A_sum, x) + self._b_sum
 
         s, batch_size = self._determine_batch(type, batch_size, seed)
         x = x.reshape((self.d, 1))
@@ -129,10 +122,10 @@ class Quadratic(Unconstrained_Problem):
             self._b_list[:, s], axis=1
         ).reshape((self.d, 1))
 
-        return val
+        return val/batch_size
 
     def hessian(
         self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None
     ) -> np.array:
         s, batch_size = self._determine_batch(type, batch_size, seed)
-        return np.sum(self._A_list[:, :, s], axis=2)
+        return np.sum(self._A_list[:, :, s], axis=2)/batch_size
