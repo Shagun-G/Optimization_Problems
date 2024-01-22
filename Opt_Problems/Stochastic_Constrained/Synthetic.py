@@ -1,6 +1,7 @@
 from Opt_Problems.utils import Problem
 from Opt_Problems.Stochastic_Unconstrained.Synthetic import Quadratic
 import numpy as np
+# import jax.numpy as np
 from typing import Callable
 
 
@@ -145,12 +146,15 @@ class Quadratic_linear_norm_constraints(Problem):
         return self.objective_function.hessian(x=x, type=type, batch_size=batch_size, seed=seed)
 
     def constraints_eq(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return np.vstack((np.dot(self._A, x) - self._b_1, np.linalg.norm(x)**2 - self._b_2))
 
     def constraints_eq_jacobian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return np.vstack((self._A, 2*x.T))
 
     def constraints_eq_hessian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         hessians = []
         for _ in range(self._m):
             hessians.append(np.zeros((self.d, self.d)))
@@ -205,12 +209,14 @@ class Quadratic_linear_constraints(Problem):
         return self.objective_function.hessian(x=x, type=type, batch_size=batch_size, seed=seed)
 
     def constraints_eq(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return np.dot(self._A, x) - self._b_1
 
     def constraints_eq_jacobian(self, x: np.array) -> np.array:
         return self._A
 
     def constraints_eq_hessian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         hessians = []
         for _ in range(self._m):
             hessians.append(np.zeros((self.d, self.d)))
@@ -260,12 +266,15 @@ class Quadratic_norm_constraints(Problem):
         return self.objective_function.hessian(x=x, type=type, batch_size=batch_size, seed=seed)
 
     def constraints_eq(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return np.array([[np.linalg.norm(x)**2 - self._b_2]])
 
     def constraints_eq_jacobian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return 2*x.T
 
     def constraints_eq_hessian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         hessians = []
         hessians.append(np.identity(self.d))
 

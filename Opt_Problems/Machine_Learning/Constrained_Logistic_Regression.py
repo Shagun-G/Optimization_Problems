@@ -62,12 +62,15 @@ class Cross_Entropy_Binary_Linear_norm_constraint(Problem):
         raise Exception(f"Can't compute hessian for {self.name}")
 
     def constraints_eq(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return np.vstack((np.dot(self._A, x) - self._b_1, np.linalg.norm(x)**2 - self._b_2))
 
     def constraints_eq_jacobian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return np.vstack((self._A, 2*x.T))
 
     def constraints_eq_hessian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         hessians = []
         for _ in range(self._m):
             hessians.append(np.zeros((self.d, self.d)))
@@ -143,12 +146,15 @@ class Cross_Entropy_Binary_Linear_constraint(Problem):
         raise Exception(f"Can't compute hessian for {self.name}")
 
     def constraints_eq(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return np.dot(self._A, x) - self._b_1
 
     def constraints_eq_jacobian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return self._A
 
     def constraints_eq_hessian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         hessians = []
         for _ in range(self._m):
             hessians.append(np.zeros((self.d, self.d)))
@@ -215,12 +221,15 @@ class Cross_Entropy_Binary_norm_constraint(Problem):
         raise Exception(f"Can't compute hessian for {self.name}")
 
     def constraints_eq(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return np.array([[np.linalg.norm(x)**2 - self._b_2]])
 
     def constraints_eq_jacobian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         return  2*x.T
 
     def constraints_eq_hessian(self, x: np.array) -> np.array:
+        x = x.reshape((self.d, 1))
         hessians = []
         hessians.append(np.identity(self.d))
 
