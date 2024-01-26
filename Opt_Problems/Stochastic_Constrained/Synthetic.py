@@ -137,13 +137,13 @@ class Quadratic_linear_norm_constraints(Problem):
         return np.ones((self.d, 1))
 
     def objective(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> float:
-        return self.objective_function.objective(x=x, type = type, batch_size=batch_size, seed=seed)
+        return self.objective_function.objective(x=x, type = type, batch_size=batch_size, seed=seed, data_indices=data_indices)
 
     def gradient(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> np.ndarray:
-        return self.objective_function.gradient(x=x, type=type, batch_size=batch_size, seed=seed)
+        return self.objective_function.gradient(x=x, type=type, batch_size=batch_size, seed=seed, data_indices=data_indices)
 
     def hessian(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> np.array:
-        return self.objective_function.hessian(x=x, type=type, batch_size=batch_size, seed=seed)
+        return self.objective_function.hessian(x=x, type=type, batch_size=batch_size, seed=seed, data_indices=data_indices)
 
     def constraints_eq(self, x: np.array) -> np.array:
         x = x.reshape((self.d, 1))
@@ -200,13 +200,13 @@ class Quadratic_linear_constraints(Problem):
         return np.ones((self.d, 1))
 
     def objective(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> float:
-        return self.objective_function.objective(x=x, type = type, batch_size=batch_size, seed=seed)
+        return self.objective_function.objective(x=x, type = type, batch_size=batch_size, seed=seed, data_indices=data_indices)
 
     def gradient(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> np.ndarray:
-        return self.objective_function.gradient(x=x, type=type, batch_size=batch_size, seed=seed)
+        return self.objective_function.gradient(x=x, type=type, batch_size=batch_size, seed=seed, data_indices=data_indices)
 
     def hessian(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> np.array:
-        return self.objective_function.hessian(x=x, type=type, batch_size=batch_size, seed=seed)
+        return self.objective_function.hessian(x=x, type=type, batch_size=batch_size, seed=seed, data_indices=data_indices)
 
     def constraints_eq(self, x: np.array) -> np.array:
         x = x.reshape((self.d, 1))
@@ -257,13 +257,13 @@ class Quadratic_norm_constraints(Problem):
         return np.ones((self.d, 1))
 
     def objective(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> float:
-        return self.objective_function.objective(x=x, type = type, batch_size=batch_size, seed=seed)
+        return self.objective_function.objective(x=x, type = type, batch_size=batch_size, seed=seed, data_indices=data_indices)
 
     def gradient(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> np.ndarray:
-        return self.objective_function.gradient(x=x, type=type, batch_size=batch_size, seed=seed)
+        return self.objective_function.gradient(x=x, type=type, batch_size=batch_size, seed=seed, data_indices=data_indices)
 
     def hessian(self, x: np.array, type: str, batch_size: int = 0, seed: int | None = None, data_indices : list | None = None) -> np.array:
-        return self.objective_function.hessian(x=x, type=type, batch_size=batch_size, seed=seed)
+        return self.objective_function.hessian(x=x, type=type, batch_size=batch_size, seed=seed, data_indices=data_indices)
 
     def constraints_eq(self, x: np.array) -> np.array:
         x = x.reshape((self.d, 1))
