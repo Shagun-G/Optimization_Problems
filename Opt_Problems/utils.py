@@ -3,6 +3,7 @@ from numpy.core.multiarray import array as array
 from sklearn.datasets import load_svmlight_file
 from abc import ABC, abstractmethod
 import numpy as np
+from sklearn import preprocessing
 
 class Problem(ABC):
 
@@ -165,10 +166,13 @@ class Unconstrained_Problem(Problem, ABC):
         raise Exception("No Inequality Constraints")
 
 def datasets_manager(name, location):
+
+    if name not in location:
+        raise Exception("Name and file pointed to in location are different")
+
     X, y = load_svmlight_file(location)
 
     # preprocessing for specific datasets
-
     if name.lower() == "mushroom":
         # the target variable needs to be offset
         y = y - 1
@@ -201,7 +205,7 @@ def datasets_manager(name, location):
             "Unknown dataset, preprocessing might be required for correct format"
         )
 
-    if name not in location:
-        raise Exception("Name and file pointed to in location are different")
+    # normalizing dataset
+    X = preprocessing.normalize(X)
 
     return X, y

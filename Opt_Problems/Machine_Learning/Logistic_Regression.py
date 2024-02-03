@@ -125,7 +125,7 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
 
         # replace nan with 0 to for 0*log(0) values
         loss[np.isnan(loss)] = 0
-        return np.mean(loss) + np.linalg.norm(x)**2/self.number_of_datapoints
+        return np.mean(loss) + np.linalg.norm(x) ** 2 / self.number_of_datapoints
 
     def gradient(
         self,
