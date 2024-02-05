@@ -5,8 +5,8 @@ from abc import ABC, abstractmethod
 import numpy as np
 from sklearn import preprocessing
 
-class Problem(ABC):
 
+class Problem(ABC):
     """
     Defines structure of problems.
 
@@ -106,8 +106,8 @@ class Problem(ABC):
         """return inequality constrainst jacobian matrix value (m_ineq, n, n)"""
         pass
 
-class Unconstrained_Problem(Problem, ABC):
 
+class Unconstrained_Problem(Problem, ABC):
     """
     Defines structure of unconstrained problems.
     Required Attributes:
@@ -125,6 +125,8 @@ class Unconstrained_Problem(Problem, ABC):
         self._name = name
         self._d = d
         self._number_of_datapoints = number_of_datapoints
+        self._number_of_eq_constraints = 0
+        self._number_of_ineq_constraints = 0
 
     @abstractmethod
     def initial_point(self) -> np.array:
@@ -146,7 +148,8 @@ class Unconstrained_Problem(Problem, ABC):
         """returns hessian of problem, shape (d, d)"""
         pass
 
-    '''The constraints below don't exist and thus return errors'''
+    """The constraints below don't exist and thus return errors"""
+
     def constraints_eq(self, x: np.array):
         raise Exception("No Equality Constraints")
 
@@ -164,6 +167,7 @@ class Unconstrained_Problem(Problem, ABC):
 
     def constraints_ineq_hessian(self, x: np.array):
         raise Exception("No Inequality Constraints")
+
 
 def datasets_manager(name, location):
 
