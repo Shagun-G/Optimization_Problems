@@ -10,14 +10,16 @@ from Opt_Problems.CUTEST.CUTEST_deterministic import CUTEST_constrained
 class CUTEST_constrained_stochastic_with_start_point(Problem):
 
 
-    '''Constructs a stochastic CUTEST problem with the added noise to the objective in the form of f(x) + xi ||x - x_0||^2/2 where xi follows normal distribution with mean 0 and specified standard deviation'''
+    '''Constructs a stochastic CUTEST problem with the added noise to the objective in the form of f(x) + xi * scale * ||x - x_0||^2/2 where xi follows normal distribution with mean 0 and specified standard deviation'''
 
-    def __init__(self, name: str, std_dev : float):
+    def __init__(self, name: str, std_dev : float, scale : float = 1):
 
         """import problem from cutest dataset"""
         self._cutest_object = CUTEST_constrained(name=name)
         super().__init__(name=name, d=self._cutest_object.d, eq_const_number=self._cutest_object.number_of_eq_constraints, ineq_const_number=self._cutest_object.number_of_ineq_constraints, number_of_datapoints=np.inf)
-        self.std = std_dev
+        self._std = std_dev
+        self._scale = scale
+
 
     def print_parameters(self):
         """print parameters of the cutest problem"""
@@ -129,4 +131,4 @@ class CUTEST_constrained_stochastic_with_start_point(Problem):
 
                 xi_list.append(rng.standard_normal(size=(1)).squeeze())
 
-        return self.std * np.average(s)
+        return self._std * self._scale * np.average(s)
