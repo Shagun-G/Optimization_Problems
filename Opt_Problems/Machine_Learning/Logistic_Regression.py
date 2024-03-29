@@ -114,8 +114,7 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
             s = np.array(data_indices)
 
         # signmoid calculate
-        exp_neg = np.exp(-np.dot(x.T, self._features[:, s])).T
-        y_hat = 1 / (1 + exp_neg)
+        y_hat = expit(np.dot(x.T, self._features[:, s])).T
 
         # cross entropy loss
         loss = -(
@@ -154,11 +153,180 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
         x = x.reshape((self._number_of_features, 1))
 
         """Non sparse calculation"""
-        exp_neg = np.exp(-np.dot(x.T, self._features[:, s])).T
-        y_hat = 1 / (1 + exp_neg)
+        y_hat = expit(np.dot(x.T, self._features[:, s])).T
         g = (
             np.dot(self._features[:, s], (y_hat - self._targets[s, :])) / batch_size
             + 2 * x / self._number_of_datapoints
+        )
+
+        return g.reshape((self._number_of_features, 1))
+
+    def hessian(
+        self,
+        x: np.array,
+        type: str,
+        batch_size: int = 0,
+        seed: int | None = None,
+        data_indices: list | None = None,
+    ) -> np.array:
+        raise Exception(f"Can't compute hessian for {self.name}")
+
+
+class Huber_Loss_Binary(Unconstrained_Problem):
+    def __init__(self, location: str, name: str):
+        """
+        Logistic regression over the robust regression huber loss t^2 / (1 + t^2)
+
+        Inputs:
+        name        :   name of the dataset
+        location    :   location of libsvm file to create logictic regression file
+
+        object attributes:
+        _number_of_features : number of features, includes the bias term
+        _number_of_classes  : number of classes
+        _features           : feature dataset (number of features x number of datapoints),
+                            includes bias term constant
+        _targets            : target labels ({0,1} x number of datapoints)
+        """
+
+        self._number_of_classes = 2
+        self._dataset_name = name
+        X, y = datasets_manager(name=name, location=location)
+        number_of_datapoints, self._number_of_features = np.shape(X)
+        y = y.reshape((number_of_datapoints, 1))  # reshaping target matrix
+        X = np.vstack(
+            (X.toarray().T, np.ones((1, number_of_datapoints)))
+        )  # adding bias term to features
+
+        self._number_of_features += 1
+        self._features = X
+        self._targets = y
+        super().__init__(
+            name=f"{name}_cross_entropy_logistic",
+            d=self._number_of_features,
+            number_of_datapoints=number_of_datapoints,
+        )
+
+    def initial_point(self) -> np.ndarray:
+        return np.ones((self.d, 1))
+
+    @property
+    def dataset_name(self) -> str:
+        return self._dataset_name
+
+    @property
+    def number_of_classes(self) -> int:
+        return self._number_of_classes
+
+    @property
+    def number_of_features(self) -> int:
+        return self._number_of_features
+
+    def _determine_batch(
+        self, type: str, batch_size: int = 0, seed: int | None = None
+    ) -> np.array:
+        """
+        Generates an array of indices for a batch of data for calculation
+        Inputs:
+        type        :   "full" for full data and "stochastic" for batch
+        batch_size  :   (optional) only used when stochastic type of batch
+        seed        :   (optional) if not specified, random batch, else specify for the same batch of data
+        """
+        if type == "full":
+            s = np.arange(self._number_of_datapoints)
+            batch_size = self._number_of_datapoints
+            return s, batch_size
+
+        if type == "stochastic":
+            if seed is None:
+                rng = np.random.default_rng(
+                    np.random.randint(np.iinfo(np.int16).max, size=1)[0]
+                )
+            elif isinstance(seed, int):
+                rng = np.random.default_rng(seed)
+            else:
+                raise Exception("seed must be an integer if specified")
+
+            if batch_size < 0:
+                raise Exception(f"{type} gradient requires a batch_size > 0")
+
+            if batch_size > self._number_of_datapoints:
+                batch_size = self._number_of_datapoints
+                # raise Exception("Batch size specified is larger than size of dataset")
+
+            s = rng.choice(self._number_of_datapoints, size=(batch_size), replace=False)
+            return s, batch_size
+
+        raise Exception(f"{type} is not a defined type of gradient")
+
+    def objective(
+        self,
+        x: np.array,
+        type: str,
+        batch_size: int = 0,
+        seed: int | None = None,
+        data_indices: list | None = None,
+    ) -> float:
+        """
+        Calculates loss for full or a stochastic batch of data
+        Inputs:
+        x           :   logistic regression parameters
+        type        :   "full" for full data and "stochastic" for batch
+        batch_size  :   (optional) only used when stochastic type of batch
+        seed        :   (optional) if not specified, random batch, else specify for the same batch of data
+        """
+        """Evaluates MLE loss"""
+
+        if data_indices == None:
+            s, batch_size = self._determine_batch(type, batch_size, seed)
+        else:
+            batch_size = len(data_indices)
+            s = np.array(data_indices)
+
+        # signmoid calculate
+        error = self._targets[s, :] - expit(np.dot(x.T, self._features[:, s])).T
+
+        # cross entropy loss
+        loss = np.sum(np.square(error) / (1 + np.square(error))) / batch_size
+
+        return loss
+
+    def gradient(
+        self,
+        x: np.array,
+        type: str,
+        batch_size: int = 0,
+        seed: int | None = None,
+        data_indices: list | None = None,
+    ) -> np.ndarray:
+        """MLE Loss gradient"""
+        """
+        Calculates gradient of loss for full or a stochastic batch of data
+        Inputs:
+        x           :   logistic regression parameters
+        type        :   "full" for full data and "stochastic" for batch
+        batch_size  :   (optional) only used when stochastic type of batch
+        seed        :   (optional) if not specified, random batch, else specify for the same batch of data
+        """
+
+        if data_indices == None:
+            s, batch_size = self._determine_batch(type, batch_size, seed)
+        else:
+            batch_size = len(data_indices)
+            s = np.array(data_indices)
+
+        x = x.reshape((self._number_of_features, 1))
+
+        """Non sparse calculation"""
+        sigmoid = expit(np.dot(x.T, self._features[:, s])).T
+        error =  sigmoid - self._targets[s, :]
+        g = (
+            2
+            * np.dot(
+                self._features[:, s],
+                ((error / (1 + np.square(error))) * sigmoid * (1 - sigmoid)),
+            )
+            / batch_size
         )
 
         return g.reshape((self._number_of_features, 1))
@@ -179,8 +347,8 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
 # TODO : objective calculation
 # TODO : gradient calculation
 # TODO : Function descriptions update
-class Cross_Entropy_Multiclass(Unconstrained_Problem):
-    pass
+# class Cross_Entropy_Multiclass(Unconstrained_Problem):
+    # pass
     # def __init__(self, location: str, name: str):
     #     """
     #     # regularization with #datapoints
