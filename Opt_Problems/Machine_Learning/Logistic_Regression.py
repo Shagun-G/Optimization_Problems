@@ -24,8 +24,10 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
         X, y = datasets_manager(name=name, location=location)
         number_of_datapoints, self._number_of_features = np.shape(X)
         y = y.reshape((number_of_datapoints, 1))  # reshaping target matrix
+        X = X.toarray()
+        X = (X - X.min(0)) / X.ptp(0)
         X = np.vstack(
-            (X.toarray().T, np.ones((1, number_of_datapoints)))
+            (X.T, np.ones((1, number_of_datapoints)))
         )  # adding bias term to features
 
         self._number_of_features += 1
@@ -194,8 +196,10 @@ class Huber_Loss_Binary(Unconstrained_Problem):
         X, y = datasets_manager(name=name, location=location)
         number_of_datapoints, self._number_of_features = np.shape(X)
         y = y.reshape((number_of_datapoints, 1))  # reshaping target matrix
+        X = X.toarray()
+        X = (X - X.min(0)) / X.ptp(0)
         X = np.vstack(
-            (X.toarray().T, np.ones((1, number_of_datapoints)))
+            (X.T, np.ones((1, number_of_datapoints)))
         )  # adding bias term to features
 
         self._number_of_features += 1

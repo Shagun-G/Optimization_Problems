@@ -210,6 +210,10 @@ def datasets_manager(name, location):
         )
 
     # normalizing dataset
-    X = preprocessing.normalize(X)
+    # Do not use scipy normaize due to the norm options being limited and not incorporating the negative values well.
+    # X = preprocessing.normalize(X)
+    # X = preprocessing.normalize(X, axis = 0, )
+    # X = (X - X.min(0)) / X.ptp(0)
+    '''Normalization being doe now at the problem formulation'''
 
     return X, y
