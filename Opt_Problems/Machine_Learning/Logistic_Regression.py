@@ -214,7 +214,7 @@ class Huber_Loss_Binary(Unconstrained_Problem):
         )
 
     def initial_point(self) -> np.ndarray:
-        return np.ones((self.d, 1))
+        return np.zeros((self.d, 1))
 
     @property
     def dataset_name(self) -> str:
@@ -325,15 +325,14 @@ class Huber_Loss_Binary(Unconstrained_Problem):
 
         """Non sparse calculation"""
         sigmoid = expit(np.dot(x.T, self._features[:, s])).T
-        error = sigmoid - self._targets[s, :]
-        g = (
-            2
-            * np.dot(
+        error = self._targets[s, :] - sigmoid
+        g = 2 * (
+            np.dot(
                 self._features[:, s],
-                ((error / (1 + np.square(error))) * sigmoid * (1 - sigmoid)),
+                ((error / np.square((1 + np.square(error)))) * sigmoid * (sigmoid - 1)),
             )
-            / batch_size
-        )
+            
+        ) / batch_size
 
         return g.reshape((self._number_of_features, 1))
 
