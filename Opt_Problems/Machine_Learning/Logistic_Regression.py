@@ -4,7 +4,7 @@ from scipy.special import expit
 
 
 class Cross_Entropy_Binary(Unconstrained_Problem):
-    def __init__(self, location: str, name: str):
+    def __init__(self, location: str, name: str, test_data_location: str = ""):
         """
         # regularization with #datapoints
         Inputs:
@@ -22,18 +22,38 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
         self._number_of_classes = 2
         self._dataset_name = name
         X, y = datasets_manager(name=name, location=location)
+        if test_data_location != "":
+            self._test_data = True
+            X_test, y_test = datasets_manager(name=name, location=test_data_location)
+            self._number_of_test_points, _ = np.shape(X_test)
+            y_test = y_test.reshape((self._number_of_test_points, 1))  # reshaping target matrix
+            X_test = X_test.toarray()
+        else:
+            self._test_data = False
+
         number_of_datapoints, self._number_of_features = np.shape(X)
         y = y.reshape((number_of_datapoints, 1))  # reshaping target matrix
         X = X.toarray()
-        X = (X - X.min(0)) / X.ptp(0)  # normalizing
+        ptp = X.ptp(0)
+        mins_data = X.min(0)
+        X = (X - mins_data) / ptp  # normalizing
         X = np.nan_to_num(X, nan=0)  # replacing divide by 0 with 0
         X = np.vstack(
             (X.T, np.ones((1, number_of_datapoints)))
         )  # adding bias term to features
-
         self._number_of_features += 1
         self._features = X
         self._targets = y
+
+        if self._test_data:
+            X_test = (X_test - mins_data) / ptp  # normalizing
+            X_test = np.nan_to_num(X_test, nan=0)  # replacing divide by 0 with 0
+            X_test = np.vstack(
+                (X_test.T, np.ones((1, self._number_of_test_points)))
+            )  # adding bias term to features
+            self._features_test = X_test
+            self._targets_test = y_test
+
         super().__init__(
             name=f"{name}_cross_entropy_logistic",
             d=self._number_of_features,
@@ -174,9 +194,56 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
     ) -> np.array:
         raise Exception(f"Can't compute hessian for {self.name}")
 
+    def objective_test(
+        self,
+        x: np.array,
+    ) -> float:
+        """
+        Calculates loss for full test data
+        Inputs:
+        x           :   logistic regression parameters
+        """
+        """Evaluates MLE loss"""
+
+        if not self._test_data:
+            raise Exception("No test Data available")
+
+        # signmoid calculate
+        y_hat = expit(np.dot(x.T, self._features_test)).T
+
+        # cross entropy loss
+        loss = -(
+            self._targets_test * np.log(y_hat)
+            + (1 - self._targets_test) * np.log(1 - y_hat)
+        )
+
+        # replace nan with 0 to for 0*log(0) values
+        loss[np.isnan(loss)] = 0
+        return np.mean(loss)
+
+    def accuracy_test(
+        self,
+        x: np.array,
+    ) -> float:
+        """
+        Calculates accuracy for full test data
+        Inputs:
+        x           :   logistic regression parameters
+        """
+
+        if not self._test_data:
+            raise Exception("No test Data available")
+
+        # signmoid calculate
+        y_hat = expit(np.dot(x.T, self._features_test)).T
+
+        # cross entropy loss
+        accuracy = 1*(y_hat > 0.5) - self._targets_test
+
+        return np.mean(np.abs(accuracy))
 
 class Huber_Loss_Binary(Unconstrained_Problem):
-    def __init__(self, location: str, name: str):
+    def __init__(self, location: str, name: str, test_data_location: str = ""):
         """
         Logistic regression over the robust regression huber loss t^2 / (1 + t^2)
 
@@ -195,14 +262,37 @@ class Huber_Loss_Binary(Unconstrained_Problem):
         self._number_of_classes = 2
         self._dataset_name = name
         X, y = datasets_manager(name=name, location=location)
+        if test_data_location != "":
+            self._test_data = True
+            X_test, y_test = datasets_manager(name=name, location=test_data_location)
+            self._number_of_test_points, _ = np.shape(X_test)
+            y_test = y_test.reshape((self._number_of_test_points, 1))  # reshaping target matrix
+            X_test = X_test.toarray()
+        else:
+            self._test_data = False
+
         number_of_datapoints, self._number_of_features = np.shape(X)
         y = y.reshape((number_of_datapoints, 1))  # reshaping target matrix
         X = X.toarray()
-        X = (X - X.min(0)) / X.ptp(0)  # normalizing
+        ptp = X.ptp(0)
+        mins_data = X.min(0)
+        X = (X - mins_data) / ptp  # normalizing
         X = np.nan_to_num(X, nan=0)  # replacing divide by 0 with 0
         X = np.vstack(
             (X.T, np.ones((1, number_of_datapoints)))
         )  # adding bias term to features
+        self._number_of_features += 1
+        self._features = X
+        self._targets = y
+
+        if self._test_data:
+            X_test = (X_test - mins_data) / ptp  # normalizing
+            X_test = np.nan_to_num(X_test, nan=0)  # replacing divide by 0 with 0
+            X_test = np.vstack(
+                (X_test.T, np.ones((1, self._number_of_test_points)))
+            )  # adding bias term to features
+            self._features_test = X_test
+            self._targets_test = y_test
 
         self._number_of_features += 1
         self._features = X
@@ -345,6 +435,54 @@ class Huber_Loss_Binary(Unconstrained_Problem):
         data_indices: list | None = None,
     ) -> np.array:
         raise Exception(f"Can't compute hessian for {self.name}")
+
+    def objective_test(
+        self,
+        x: np.array,
+    ) -> float:
+        """
+        Calculates loss for full test data
+        Inputs:
+        x           :   logistic regression parameters
+        """
+        """Evaluates MLE loss"""
+
+        if not self._test_data:
+            raise Exception("No test Data available")
+
+        # signmoid calculate
+        y_hat = expit(np.dot(x.T, self._features_test)).T
+
+        # cross entropy loss
+        loss = -(
+            self._targets_test * np.log(y_hat)
+            + (1 - self._targets_test) * np.log(1 - y_hat)
+        )
+
+        # replace nan with 0 to for 0*log(0) values
+        loss[np.isnan(loss)] = 0
+        return np.mean(loss)
+
+    def accuracy_test(
+        self,
+        x: np.array,
+    ) -> float:
+        """
+        Calculates accuracy for full test data
+        Inputs:
+        x           :   logistic regression parameters
+        """
+
+        if not self._test_data:
+            raise Exception("No test Data available")
+
+        # signmoid calculate
+        y_hat = expit(np.dot(x.T, self._features_test)).T
+
+        # cross entropy loss
+        accuracy = 1*(y_hat > 0.5) - self._targets_test
+
+        return np.mean(np.abs(accuracy))
 
 
 # TODO : Constructor function

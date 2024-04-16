@@ -177,25 +177,25 @@ def datasets_manager(name, location):
     X, y = load_svmlight_file(location)
 
     # preprocessing for specific datasets
-    if name.lower() == "mushroom":
+    if "mushroom" in name.lower():
         # the target variable needs to be offset
         y = y - 1
-    elif name.lower() == "australian":
+    elif "australian" in name.lower():
         # the target has to be changed from {-1, +1} to {0, 1}
         y[y == -1] = 0
-    elif name.lower() == "phishing":
+    elif "phishing" in name.lower():
         # no formatting required, {0,1} labels
         pass
-    elif name.lower() == "sonar":
+    elif "sonar" in name.lower():
         # the target has to be changed from {-1, +1} to {0, 1}
         y[y == -1] = 0
-    elif name.lower() == "gisette":
+    elif "gisette" in name.lower():
         # the target has to be changed from {-1, +1} to {0, 1}
         y[y == -1] = 0
-    elif name.lower() == "a9a":
+    elif "a9a" in name.lower():
         # the target has to be changed from {-1, +1} to {0, 1}
         y[y == -1] = 0
-    elif name.lower() == "w8a":
+    elif "w8a" in name.lower():
         # the target has to be changed from {-1, +1} to {0, 1}
         y[y == -1] = 0
     elif "ijcnn" in name.lower():
@@ -214,6 +214,6 @@ def datasets_manager(name, location):
     # X = preprocessing.normalize(X)
     # X = preprocessing.normalize(X, axis = 0, )
     # X = (X - X.min(0)) / X.ptp(0)
-    '''Normalization being doe now at the problem formulation'''
+    '''Normalization being done now at the problem formulation'''
 
     return X, y
