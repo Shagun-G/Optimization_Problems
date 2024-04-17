@@ -240,7 +240,7 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
         # cross entropy loss
         accuracy = 1*(y_hat > 0.5) - self._targets_test
 
-        return np.mean(np.abs(accuracy))
+        return 1 - np.mean(np.abs(accuracy))
 
 class Huber_Loss_Binary(Unconstrained_Problem):
     def __init__(self, location: str, name: str, test_data_location: str = ""):
@@ -451,17 +451,12 @@ class Huber_Loss_Binary(Unconstrained_Problem):
             raise Exception("No test Data available")
 
         # signmoid calculate
-        y_hat = expit(np.dot(x.T, self._features_test)).T
+        error = self._targets_test - expit(np.dot(x.T, self._features_test)).T
 
         # cross entropy loss
-        loss = -(
-            self._targets_test * np.log(y_hat)
-            + (1 - self._targets_test) * np.log(1 - y_hat)
-        )
+        loss = np.sum(np.square(error) / (1 + np.square(error))) / self._number_of_test_points
 
-        # replace nan with 0 to for 0*log(0) values
-        loss[np.isnan(loss)] = 0
-        return np.mean(loss)
+        return loss
 
     def accuracy_test(
         self,
@@ -482,7 +477,7 @@ class Huber_Loss_Binary(Unconstrained_Problem):
         # cross entropy loss
         accuracy = 1*(y_hat > 0.5) - self._targets_test
 
-        return np.mean(np.abs(accuracy))
+        return 1 - np.mean(np.abs(accuracy))
 
 
 # TODO : Constructor function
