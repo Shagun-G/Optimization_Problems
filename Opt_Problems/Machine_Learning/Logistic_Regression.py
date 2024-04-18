@@ -26,7 +26,9 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
             self._test_data = True
             X_test, y_test = datasets_manager(name=name, location=test_data_location)
             self._number_of_test_points, _ = np.shape(X_test)
-            y_test = y_test.reshape((self._number_of_test_points, 1))  # reshaping target matrix
+            y_test = y_test.reshape(
+                (self._number_of_test_points, 1)
+            )  # reshaping target matrix
             X_test = X_test.toarray()
         else:
             self._test_data = False
@@ -238,9 +240,10 @@ class Cross_Entropy_Binary(Unconstrained_Problem):
         y_hat = expit(np.dot(x.T, self._features_test)).T
 
         # cross entropy loss
-        accuracy = 1*(y_hat > 0.5) - self._targets_test
+        accuracy = 1 * (y_hat > 0.5) - self._targets_test
 
         return 1 - np.mean(np.abs(accuracy))
+
 
 class Huber_Loss_Binary(Unconstrained_Problem):
     def __init__(self, location: str, name: str, test_data_location: str = ""):
@@ -266,7 +269,9 @@ class Huber_Loss_Binary(Unconstrained_Problem):
             self._test_data = True
             X_test, y_test = datasets_manager(name=name, location=test_data_location)
             self._number_of_test_points, _ = np.shape(X_test)
-            y_test = y_test.reshape((self._number_of_test_points, 1))  # reshaping target matrix
+            y_test = y_test.reshape(
+                (self._number_of_test_points, 1)
+            )  # reshaping target matrix
             X_test = X_test.toarray()
         else:
             self._test_data = False
@@ -294,9 +299,6 @@ class Huber_Loss_Binary(Unconstrained_Problem):
             self._features_test = X_test
             self._targets_test = y_test
 
-        self._number_of_features += 1
-        self._features = X
-        self._targets = y
         super().__init__(
             name=f"{name}_huber__logistic",
             d=self._number_of_features,
@@ -416,13 +418,20 @@ class Huber_Loss_Binary(Unconstrained_Problem):
         """Non sparse calculation"""
         sigmoid = expit(np.dot(x.T, self._features[:, s])).T
         error = self._targets[s, :] - sigmoid
-        g = 2 * (
-            np.dot(
-                self._features[:, s],
-                ((error / np.square((1 + np.square(error)))) * sigmoid * (sigmoid - 1)),
+        g = (
+            2
+            * (
+                np.dot(
+                    self._features[:, s],
+                    (
+                        (error / np.square((1 + np.square(error))))
+                        * sigmoid
+                        * (sigmoid - 1)
+                    ),
+                )
             )
-            
-        ) / batch_size
+            / batch_size
+        )
 
         return g.reshape((self._number_of_features, 1))
 
@@ -454,7 +463,10 @@ class Huber_Loss_Binary(Unconstrained_Problem):
         error = self._targets_test - expit(np.dot(x.T, self._features_test)).T
 
         # cross entropy loss
-        loss = np.sum(np.square(error) / (1 + np.square(error))) / self._number_of_test_points
+        loss = (
+            np.sum(np.square(error) / (1 + np.square(error)))
+            / self._number_of_test_points
+        )
 
         return loss
 
@@ -475,7 +487,7 @@ class Huber_Loss_Binary(Unconstrained_Problem):
         y_hat = expit(np.dot(x.T, self._features_test)).T
 
         # cross entropy loss
-        accuracy = 1*(y_hat > 0.5) - self._targets_test
+        accuracy = 1 * (y_hat > 0.5) - self._targets_test
 
         return 1 - np.mean(np.abs(accuracy))
 
