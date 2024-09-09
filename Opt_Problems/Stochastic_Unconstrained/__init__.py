@@ -1,1 +1,0 @@
-from .Synthetic import Quadratic
