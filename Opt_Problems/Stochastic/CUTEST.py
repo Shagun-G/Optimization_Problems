@@ -9,6 +9,7 @@ class CUTESTStochastic(CUTEST):
     def __init__(self, name: str, noise_option : CUTESTNoiseOptions, noise_level : float = 1, optimal_point: np.ndarray = None) -> None:
 
         super().__init__(name = name)
+        self._name = f"{name}_{noise_option}"
         self._number_of_datapoints = float('inf')
         self.noise_option = noise_option
         self.noise_level = noise_level
