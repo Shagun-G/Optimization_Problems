@@ -122,6 +122,21 @@ class BinaryLogisticRegression(Problem):
 
         return self._accuracy(x, self._features_test, self._targets_test)
 
+    def objective_test(self, x: np.ndarray) -> float:
+
+        if self.test_location is None:
+            raise Exception("No test Data available")
+
+        y_hat = self._predicted_probability(x, self._features_test)
+
+        if self.loss_fuction is MachineLearningLossFunctions.CrossEntropy:
+            loss = CrossEntropyLoss(y_hat, self._targets_test)
+
+        if self.loss_fuction is MachineLearningLossFunctions.HuberLoss:
+            loss = HuberLoss(y_hat, self._targets_test)
+        
+        return loss
+
     '''Functions for mid steps ML'''
     def _predicted_probability(self, x: np.ndarray, features: np.ndarray) -> np.ndarray:
 
