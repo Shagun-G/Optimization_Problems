@@ -1,4 +1,5 @@
 from Opt_Problems.Base import Problem
+from Opt_Problems.Deterministic.S2MPJ_support_files.cutest_parameters import CUTEST_PARAMETERS
 import numpy as np
 import importlib
 
@@ -9,8 +10,14 @@ class CUTEST(Problem):
     def __init__(self, name: str) -> None:
         problem = importlib.import_module("Opt_Problems.Deterministic.S2MPJ_support_files.cutest_python_problems." + name)
         problem = getattr(problem, name)
-        self._cutest_problem = problem()
-        super().__init__(name=name, d = self._cutest_problem.n, eq_const_number=self._cutest_problem.neq, ineq_const_number=self._cutest_problem.nle + self._cutest_problem.nge, number_of_datapoints=1)
+        exec("self._cutest_problem = problem(CUTEST_PARAMETERS.{}.value)".format(name))
+        if self._cutest_problem.m == 0:
+            m_eq = 0
+            m_ineq = 0
+        else:
+            m_eq = self._cutest_problem.neq
+            m_ineq = self._cutest_problem.nle + self._cutest_problem.nge
+        super().__init__(name=name, d = self._cutest_problem.n, eq_const_number=m_eq, ineq_const_number=m_ineq, number_of_datapoints=1)
 
         # scaling factor
         _, scaling_factor = self._cutest_problem.fgx(self._cutest_problem.x0)
