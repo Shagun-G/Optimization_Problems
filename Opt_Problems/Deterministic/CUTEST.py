@@ -10,8 +10,9 @@ class CUTEST(Problem):
     def __init__(self, name: str) -> None:
         problem = importlib.import_module("Opt_Problems.Deterministic.S2MPJ_support_files.cutest_python_problems." + name)
         problem = getattr(problem, name)
-        exec("self._cutest_problem = problem(CUTEST_PARAMETERS.{}.value)".format(name))
-        if self._cutest_problem.m == 0:
+        invals = getattr(CUTEST_PARAMETERS, name).value
+        exec("self._cutest_problem = problem(" + invals + ")")
+        if self._cutest_problem.m == 0: 
             m_eq = 0
             m_ineq = 0
         else:
