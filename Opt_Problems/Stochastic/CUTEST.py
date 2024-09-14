@@ -40,9 +40,9 @@ class CUTESTStochastic(CUTEST):
         noise_factor = self._generate_noise_factor(type = type, batch_size= batch_size, seed=seed, data_indices=data_indices)
 
         if self.noise_option is CUTESTNoiseOptions.UniformNoiseInitialPoint:
-            return noise_factor * np.linalg.norm(x - self.initial_point())**2
+            return noise_factor * np.linalg.norm(x - self.initial_point() + 1)**2
         if self.noise_option is CUTESTNoiseOptions.UniformNoiseInitialPointScaled:
-            return noise_factor * np.linalg.norm(x - self.initial_point())**2 / np.linalg.norm(self.initial_point() - self._optimal_point)**2
+            return noise_factor * np.linalg.norm(x - self.initial_point() + 1)**2 / np.linalg.norm(self.initial_point() - self._optimal_point)**2
         if self.noise_option is CUTESTNoiseOptions.UniformNoiseOptimalPoint:
             return noise_factor * np.linalg.norm(x - self._optimal_point)**2
 
@@ -53,9 +53,9 @@ class CUTESTStochastic(CUTEST):
         noise_factor = self._generate_noise_factor(type = type, batch_size= batch_size, seed=seed, data_indices=data_indices)
 
         if self.noise_option is CUTESTNoiseOptions.UniformNoiseInitialPoint:
-            return 2 * noise_factor * (x - self.initial_point())
+            return 2 * noise_factor * (x - self.initial_point() + 1)
         if self.noise_option is CUTESTNoiseOptions.UniformNoiseInitialPointScaled:
-            return 2 * noise_factor * (x - self.initial_point()) / np.linalg.norm(self.initial_point() - self._optimal_point) ** 2
+            return 2 * noise_factor * (x - self.initial_point() + 1) / np.linalg.norm(self.initial_point() - self._optimal_point) ** 2
         if self.noise_option is CUTESTNoiseOptions.UniformNoiseOptimalPoint:
             return 2 * noise_factor * (x - self._optimal_point)
         if self.noise_option is CUTESTNoiseOptions.NormalNoisyGradient:
