@@ -70,7 +70,8 @@ class CUTESTStochastic(CUTEST):
             if self.noise_option in [CUTESTNoiseOptions.UniformNoiseInitialPoint, CUTESTNoiseOptions.UniformNoiseInitialPointScaled, CUTESTNoiseOptions.UniformNoiseOptimalPoint]:
                 noise_factor = np.mean(rng.uniform(-self.noise_level, self.noise_level, size=batch_size))
             elif self.noise_option is CUTESTNoiseOptions.NormalNoisyGradient:
-                noise_factor = np.mean(rng.normal(0, self.noise_level, size=(self.d, batch_size)), axis=0)
+                noise_factor = rng.normal(0, self.noise_level, size=(self.d, batch_size))
+                noise_factor = np.mean(noise_factor, axis = 1).reshape(-1, 1)
             return noise_factor
 
         seed_list = super().generate_stochastic_batch(type = type, batch_size= batch_size, seed=seed, data_indices=data_indices)
