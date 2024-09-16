@@ -65,6 +65,14 @@ class CUTESTStochastic(CUTEST):
 
     def _generate_noise_factor(self, type: StochasticApproximationType, batch_size: int = None, seed: int = None, data_indices: list = None) -> float:
 
+        if type is StochasticApproximationType.MiniBatch:
+            rng = create_rng(seed)
+            if self.noise_option in [CUTESTNoiseOptions.UniformNoiseInitialPoint, CUTESTNoiseOptions.UniformNoiseInitialPointScaled, CUTESTNoiseOptions.UniformNoiseOptimalPoint]:
+                noise_factor = np.mean(rng.uniform(-self.noise_level, self.noise_level, size=batch_size))
+            elif self.noise_option is CUTESTNoiseOptions.NormalNoisyGradient:
+                noise_factor = np.mean(rng.normal(0, self.noise_level, size=(self.d, batch_size)), axis=0)
+            return noise_factor
+
         seed_list = super().generate_stochastic_batch(type = type, batch_size= batch_size, seed=seed, data_indices=data_indices)
         noise_factor = 0
         for generate_seed in seed_list:

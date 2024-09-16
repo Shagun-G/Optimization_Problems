@@ -31,7 +31,7 @@ def generate_quadratic_problem(d: int, xi: int, rng: np.random.Generator):
     return np.diag(v), b
 
 def generate_stochastic_batch(n, batch_size, rng):
-    if n > 1e20:
+    if n > 1e10:
         n = int(1e10)
     s = rng.choice(n, size=(batch_size), replace=False)
     return s
