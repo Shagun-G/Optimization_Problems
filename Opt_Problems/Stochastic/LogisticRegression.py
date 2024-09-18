@@ -48,7 +48,7 @@ class BinaryLogisticRegression(Problem):
         self.number_of_linear_constraints = number_of_linear_constraints
         self.norm_eq_constraint = norm_equality_constant is not None
         self.norm_ineq_constraint = norm_inequality_constant is not None
-        self.regularize = self.norm_eq_constraint or self.norm_ineq_constraint  
+        self.regularize = not (self.norm_eq_constraint or self.norm_ineq_constraint  )
 
         if self.number_of_linear_constraints > 0:
             m_eq += self.number_of_linear_constraints
