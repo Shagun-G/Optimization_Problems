@@ -10,6 +10,8 @@ class ExtendedOptions(Enum):
         return list(map(lambda c: c.value, cls))
 
 class Datasets(ExtendedOptions):
+
+    '''Binary Classification Datasets'''
     Australian = "australian"
     Mushroom = "mushroom"
     Phishing = "phishing"
@@ -19,6 +21,10 @@ class Datasets(ExtendedOptions):
     W8a = "w8a"
     Ijcnn = "ijcnn"
     RealSim = "real-sim"
+
+    '''Multiclass Classification Datasets'''
+    MNIST = "mnist"
+    CIFAR10 = "cifar10"
 
 
 class StochasticApproximationType(ExtendedOptions):
@@ -38,4 +44,5 @@ class MachineLearningLossFunctions(ExtendedOptions):
 
     CrossEntropy = "Cross Entropy"
     HuberLoss = "Huber Loss"
+    MSE = "Mean Squared Error"
 

@@ -121,9 +121,10 @@ class BinaryLogisticRegression(Problem):
 
         if self.loss_fuction is MachineLearningLossFunctions.CrossEntropy:
             loss = CrossEntropyLoss(y_hat, self._targets[data_points, :])
-
-        if self.loss_fuction is MachineLearningLossFunctions.HuberLoss:
+        elif self.loss_fuction is MachineLearningLossFunctions.HuberLoss:
             loss = HuberLoss(y_hat, self._targets[data_points, :])
+        else:
+            raise NotImplementedError
         
         if self.regularize:
             loss += np.linalg.norm(x) ** 2 / self.number_of_datapoints
@@ -148,11 +149,12 @@ class BinaryLogisticRegression(Problem):
             g = CrossEntropyLossDerivative(
                 y_hat, self._features[:, data_points], self._targets[data_points, :]
             )
-
-        if self.loss_fuction is MachineLearningLossFunctions.HuberLoss:
+        elif self.loss_fuction is MachineLearningLossFunctions.HuberLoss:
             g = HuberLossDerivative(
                 y_hat, self._features[:, data_points], self._targets[data_points, :]
             )
+        else:
+            raise NotImplementedError
 
         if self.regularize:
             g += 2 * x / self.number_of_datapoints

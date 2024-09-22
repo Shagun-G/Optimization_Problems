@@ -1,6 +1,7 @@
 import numpy as np
 from Opt_Problems.Options import Datasets
 from sklearn.datasets import load_svmlight_file
+import jax.numpy as jnp
 
 def create_rng(seed: int):
     if seed is None:
@@ -36,6 +37,11 @@ def generate_stochastic_batch(n, batch_size, rng):
     s = rng.choice(n, size=(batch_size), replace=False)
     return s
 
+def relu(x):
+    return jnp.maximum(0, x)
+
+def one_hot(y, k, dtype=jnp.float32):
+    return jnp.array(y[:, None] == jnp.arange(k), dtype).T
 
 def datasets_manager(dataset_name: Datasets, location:str):
 
@@ -55,6 +61,10 @@ def datasets_manager(dataset_name: Datasets, location:str):
     if dataset_name in [Datasets.Australian, Datasets.Phishing, Datasets.Sonar, Datasets.Gisette, Datasets.A9a, Datasets.W8a, Datasets.Ijcnn, Datasets.RealSim]:
         # the target has to be changed from {-1, +1} to {0, 1}
         y[y == -1] = 0
+
+    if dataset_name in [Datasets.MNIST, Datasets.CIFAR10]:
+        X = X.toarray() / 255
+        X = X.T
 
     '''Normalization being done now at the problem formulation'''
 
