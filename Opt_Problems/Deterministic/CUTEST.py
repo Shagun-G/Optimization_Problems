@@ -61,16 +61,20 @@ class CUTEST(Problem):
     def constraints_ineq(self, x: np.ndarray) -> np.ndarray:
         c_ineq = super().constraints_ineq(x)
         if self.number_of_ineq_constraints > 0:   
-            c_ineq = np.vstack([c_ineq, self._cutest_problem.cIx(x, range(self._cutest_problem.nle))])
-            c_ineq = np.vstack([c_ineq, -self._cutest_problem.cIx(x, range(self._cutest_problem.nle + self._cutest_problem.neq, self._cutest_problem.nle + self._cutest_problem.neq + self._cutest_problem.nge))])
+            if self._cutest_problem.nle > 0:
+                c_ineq = np.vstack([c_ineq, self._cutest_problem.cIx(x, range(self._cutest_problem.nle))])
+            if self._cutest_problem.nge > 0:
+                c_ineq = np.vstack([c_ineq, -self._cutest_problem.cIx(x, range(self._cutest_problem.nle + self._cutest_problem.neq, self._cutest_problem.nle + self._cutest_problem.neq + self._cutest_problem.nge))])
 
         return c_ineq
 
     def constraints_ineq_jacobian(self, x: np.ndarray) -> np.ndarray:
         J_ineq = super().constraints_ineq_jacobian(x)
         if self.number_of_ineq_constraints > 0:   
-            J_ineq = np.vstack([J_ineq, np.array(self._cutest_problem.cIJx(x, range(self._cutest_problem.nle))[1].todense())])
-            J_ineq = np.vstack([J_ineq, -np.array(self._cutest_problem.cIJx(x, range(self._cutest_problem.nle + self._cutest_problem.neq, self._cutest_problem.nle + self._cutest_problem.neq + self._cutest_problem.nge))[1].todense())])
+            if self._cutest_problem.nle > 0:
+                J_ineq = np.vstack([J_ineq, np.array(self._cutest_problem.cIJx(x, range(self._cutest_problem.nle))[1].todense())])
+            if self._cutest_problem.nge > 0:
+                J_ineq = np.vstack([J_ineq, -np.array(self._cutest_problem.cIJx(x, range(self._cutest_problem.nle + self._cutest_problem.neq, self._cutest_problem.nle + self._cutest_problem.neq + self._cutest_problem.nge))[1].todense())])
 
         return J_ineq
 
