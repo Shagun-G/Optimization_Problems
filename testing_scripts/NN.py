@@ -1,9 +1,9 @@
 from Opt_Problems.Stochastic.Nueral_networks import FNN
 from Opt_Problems.Options import StochasticApproximationType, Datasets, MachineLearningLossFunctions
 
-train_location="../Datasets/cifar10.bz2"
-test_location="../Datasets/cifar10.t.bz2"
-problem = FNN(dataset_name=Datasets.CIFAR10, train_location=train_location, test_location=test_location, loss_function=MachineLearningLossFunctions.MSE, n_Hidden=[512])
+train_location="../Datasets/mnist.bz2"
+test_location="../Datasets/mnist.t.bz2"
+problem = FNN(dataset_name=Datasets.MNIST, train_location=train_location, test_location=test_location, loss_function=MachineLearningLossFunctions.MSE, n_Hidden=[512])
 
 """Calling all functions"""
 print("Name: " + problem.name)

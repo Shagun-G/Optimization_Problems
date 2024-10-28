@@ -46,3 +46,24 @@ class MachineLearningLossFunctions(ExtendedOptions):
     HuberLoss = "Huber Loss"
     MSE = "Mean Squared Error"
 
+class PytorchClassificationModelOptions(ExtendedOptions):
+
+    # Datasets
+    MNIST = "MNIST"
+    CIFAR10 = "CIFAR10"
+    CIFAR100 = "CIFAR100"
+    EMNIST = "EMNIST"
+    FASHION_MNIST = "FASHION_MNIST"
+
+    # models
+    FNN = "FNN"
+    CNN = "CNN"
+    ResNet = "ResNet"
+
+    # activation functions
+    ReLU = "ReLU"
+    Sigmoid = "Sigmoid"
+    Tanh = "Tanh"
+
+
+
