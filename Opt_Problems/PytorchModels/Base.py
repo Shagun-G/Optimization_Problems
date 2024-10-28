@@ -1,20 +1,27 @@
 import numpy as np
 import torch
 from Opt_Problems.Base import Problem
-from Opt_Problems.Utilities import create_rng, datasets_manager
+from Opt_Problems.Utilities import (
+    create_rng,
+    datasets_manager,
+    pytorch_datasets_manager,
+)
 from Opt_Problems.Options import (
     StochasticApproximationType,
-    MachineLearningLossFunctions,
-    Datasets,
     PytorchClassificationModelOptions,
 )
 from Opt_Problems.PytorchModels.FNN import FNN
+from Opt_Problems.PytorchModels.PytorchSampler import SubsetSampler
+from torch.utils.data import DataLoader
+
 
 
 """
 Important Notices:
 
-1. The data has to be organized as one datapoint in each row (datapoints x features).
+1. The data has to be organized as one datapoint in each row (datapoints x features) when flattened.
+2. Datasets are downloaded from Pytorch inbuilt datasets.
+3. Primarily for image classification.
 
 """
 
@@ -23,31 +30,12 @@ class PytorchModelsClassification(Problem):
 
     def __init__(
         self,
-        dataset_name: Datasets,
-        train_location: str,
+        dataset_name: PytorchClassificationModelOptions,
         pytorch_model: PytorchClassificationModelOptions,
-        test_location: str = None,
         **kwargs: dict[PytorchClassificationModelOptions, list],
     ) -> None:
         """Read Dataset"""  # datasets have each column as features)
-        X_train, y_train = datasets_manager(
-            dataset_name=dataset_name, location=train_location
-        )
-        n_train = X_train.shape[1]
-        self._features_train = X_train
-        self._targets_train = y_train
-        self.number_of_classes = len(np.unique(y_train))
-
-        self.test_location = test_location
-        if self.test_location is not None:
-            X_test, y_test = datasets_manager(
-                dataset_name=dataset_name, location=self.test_location
-            )
-            self.n_test = X_test.shape[1]
-            if dataset_name is Datasets.MNIST:
-                X_test = np.vstack((X_test, np.ones((2, X_test.shape[1]))))
-            self._features_test = X_test
-            self._targets_test = y_test
+        self.train_features, self.train_labels, self.test_features, self.test_labels, self.number_of_classes = pytorch_datasets_manager(dataset_name=dataset_name)
 
         """Device"""
         if torch.cuda.is_available():
@@ -77,7 +65,7 @@ class PytorchModelsClassification(Problem):
                 raise ValueError("Unknown activation function")
 
             self.model = FNN(
-                input_dim=self._features_train.shape[0],
+                input_dim=self.train_features[0].numel(),
                 hidden_layers=self.layers,
                 output_dim=self.number_of_classes,
                 activation=self.activation,
@@ -87,27 +75,17 @@ class PytorchModelsClassification(Problem):
 
         """Send model and data to device"""
         self.model.to(self.device)
-        self._features_train = (
-            torch.from_numpy(self._features_train.T).to(torch.float32).to(self.device)
-        )
-        self._targets_train = (
-            torch.from_numpy(self._targets_train).to(torch.int64).to(self.device)
-        )
-        if self.test_location is not None:
-            self._features_test = (
-                torch.from_numpy(self._features_test.T)
-                .to(torch.float32)
-                .to(self.device)
-            )
-            self._targets_test = (
-                torch.from_numpy(self._targets_test).to(torch.int64).to(self.device)
-            )
+        self.train_features = self.train_features.to(self.device)
+        self.train_labels = self.train_labels.to(self.device)
+        self.test_features = self.test_features.to(self.device)
+        self.test_labels = self.test_labels.to(self.device)
+
 
         """Call super class"""
         super().__init__(
             name=f"{dataset_name.value}_{self.pytorch_model.value}",
             d=sum([param.numel() for param in self.model.parameters()]),
-            number_of_datapoints=n_train,
+            number_of_datapoints=self.train_features.size(0),
         )
 
         """Set Loss function"""
@@ -131,7 +109,7 @@ class PytorchModelsClassification(Problem):
         self.model.load_state_dict(state_dict)
 
     def _parameter_grad_to_numpy_vector(self) -> np.ndarray:
-        x = np.zeros((self.d, ))
+        x = np.zeros((self.d,))
         index = 0
         for param in self.model.parameters():
             x[index : index + param.numel()] = param.grad.view(-1).to("cpu").numpy()
@@ -157,10 +135,7 @@ class PytorchModelsClassification(Problem):
         # calculate loss in eval mode
         self.model.eval()
         with torch.inference_mode():
-            loss = self.loss_fuction(
-                self.model(self._features_train[data_points]),
-                self._targets_train[data_points],
-            )
+            loss = self.loss_fuction(self.model(self.train_features[data_points]), self.train_labels[data_points])
 
         return float(loss)
 
@@ -182,17 +157,13 @@ class PytorchModelsClassification(Problem):
 
         # calculate loss in train mode
         self.model.train()
-        loss = self.loss_fuction(
-            self.model(self._features_train[data_points]),
-            self._targets_train[data_points],
-        )
+        loss = self.loss_fuction(self.model(self.train_features[data_points]), self.train_labels[data_points])
 
         # calculate gradients
         loss.backward()
 
         # convert gradients to vector
         grad = self._parameter_grad_to_numpy_vector()
-
         self.model.zero_grad()
 
         return grad
@@ -202,41 +173,26 @@ class PytorchModelsClassification(Problem):
         x: np.ndarray,
     ) -> float:
 
-        if self.test_location is None:
-            raise Exception("No test Data available")
-
         # convert vector to model parameters
         self._numpy_vector_assign_to_model(x)
 
-        return self._accuracy(self._features_train, self._targets_train)
+        return self._accuracy(self.train_features, self.train_labels)
 
     def accuracy_test(
         self,
         x: np.ndarray,
-        W: list[np.ndarray] = None,
-        b: list[np.ndarray] = None,
-        in_matrix_form: bool = False,
     ) -> float:
-
-        if self.test_location is None:
-            raise Exception("No test Data available")
 
         # convert vector to model parameters
         self._numpy_vector_assign_to_model(x)
 
-        return self._accuracy(self._features_test, self._targets_test)
+        return self._accuracy(self.test_features, self.test_labels)
 
     def objective_test(
         self,
         x: np.ndarray,
-        W: list[np.ndarray] = None,
-        b: list[np.ndarray] = None,
-        in_matrix_form: bool = False,
     ) -> float:
         pass
-
-        if self.test_location is None:
-            raise Exception("No test Data available")
 
         # convert vector to model parameters
         self._numpy_vector_assign_to_model(x)
@@ -244,10 +200,7 @@ class PytorchModelsClassification(Problem):
         # calculate loss in eval mode
         self.model.eval()
         with torch.inference_mode():
-            loss = self.loss_fuction(
-                self.model(self._features_test),
-                self._targets_test,
-            )
+            loss = self.loss_fuction(self.model(self.test_features), self.test_labels)
 
         return float(loss)
 
@@ -256,5 +209,3 @@ class PytorchModelsClassification(Problem):
         output = torch.softmax(self.model(features), dim=1)
         output = torch.argmax(output, dim=1)
         return float(torch.sum(output == targets) / targets.shape[0])
-
-

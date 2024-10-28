@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class ExtendedOptions(Enum):
     @classmethod
     def list(cls):
@@ -9,9 +10,10 @@ class ExtendedOptions(Enum):
     def list_values(cls):
         return list(map(lambda c: c.value, cls))
 
-class Datasets(ExtendedOptions):
 
-    '''Binary Classification Datasets'''
+class Datasets(ExtendedOptions):
+    """Binary Classification Datasets"""
+
     Australian = "australian"
     Mushroom = "mushroom"
     Phishing = "phishing"
@@ -22,7 +24,7 @@ class Datasets(ExtendedOptions):
     Ijcnn = "ijcnn"
     RealSim = "real-sim"
 
-    '''Multiclass Classification Datasets'''
+    """Multiclass Classification Datasets"""
     MNIST = "mnist"
     CIFAR10 = "cifar10"
 
@@ -33,6 +35,7 @@ class StochasticApproximationType(ExtendedOptions):
     MiniBatch = "Mini Batch Approximation"
     SpecifiedIndices = "Specified Indices"
 
+
 class CUTESTNoiseOptions(ExtendedOptions):
 
     NormalNoisyGradient = "Add Normal Noise to Gradient"
@@ -40,11 +43,13 @@ class CUTESTNoiseOptions(ExtendedOptions):
     UniformNoiseOptimalPoint = "Uniform Noise in Optimal Point Distance"
     UniformNoiseInitialPointScaled = "Uniform Noise in Initial Point Distance Scaled"
 
+
 class MachineLearningLossFunctions(ExtendedOptions):
 
     CrossEntropy = "Cross Entropy"
     HuberLoss = "Huber Loss"
     MSE = "Mean Squared Error"
+
 
 class PytorchClassificationModelOptions(ExtendedOptions):
 
@@ -52,7 +57,6 @@ class PytorchClassificationModelOptions(ExtendedOptions):
     MNIST = "MNIST"
     CIFAR10 = "CIFAR10"
     CIFAR100 = "CIFAR100"
-    EMNIST = "EMNIST"
     FASHION_MNIST = "FASHION_MNIST"
 
     # models
@@ -64,6 +68,3 @@ class PytorchClassificationModelOptions(ExtendedOptions):
     ReLU = "ReLU"
     Sigmoid = "Sigmoid"
     Tanh = "Tanh"
-
-
-

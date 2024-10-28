@@ -6,3 +6,4 @@ build/
 dist/
 *.egg-info*
 pycutest_cache_holder
+cache

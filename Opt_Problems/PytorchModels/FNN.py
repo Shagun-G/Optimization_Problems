@@ -10,7 +10,7 @@ class FNN(nn.Module):
         self.activation = activation
 
         self.Layers = nn.ModuleList()
-
+        self.Layers.append(nn.Flatten())
         self.Layers.append(nn.Linear(out_features=self.hidden_layers[0], in_features=self.input_dim))
         for index in range(len(self.hidden_layers) - 1):
             self.Layers.append(nn.Linear(out_features=self.hidden_layers[index + 1], in_features=self.hidden_layers[index]))
