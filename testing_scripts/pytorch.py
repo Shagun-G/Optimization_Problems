@@ -1,14 +1,22 @@
-from Opt_Problems.PytorchModels.Base import PytorchModelsClassification
+from Opt_Problems.PytorchModels.Base import PytorchModelsImageClassification
 from Opt_Problems.Options import (
     StochasticApproximationType,
     PytorchClassificationModelOptions,
 )
 
-problem = PytorchModelsClassification(
-    dataset_name=PytorchClassificationModelOptions.CIFAR100,
-    pytorch_model=PytorchClassificationModelOptions.FNN,
-    Hidden_Layers=[512],
-    Activation=PytorchClassificationModelOptions.ReLU,
+# problem = PytorchModelsImageClassification(
+#     dataset_name=PytorchClassificationModelOptions.FASHION_MNIST,
+#     pytorch_model=PytorchClassificationModelOptions.FNN,
+#     Hidden_Layers=[128],
+#     Activation=PytorchClassificationModelOptions.ReLU,
+# )
+# problem = PytorchModelsImageClassification(
+#     dataset_name=PytorchClassificationModelOptions.FASHION_MNIST,
+#     pytorch_model=PytorchClassificationModelOptions.TinyVGG,
+# )
+problem = PytorchModelsImageClassification(
+    dataset_name=PytorchClassificationModelOptions.CIFAR10,
+    pytorch_model=PytorchClassificationModelOptions.ResNet50,
 )
 
 # # """Calling all functions"""

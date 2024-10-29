@@ -121,7 +121,6 @@ def pytorch_datasets_manager(dataset_name: PytorchClassificationModelOptions) ->
             train=False,
             transform=ToTensor(),
         )
-
     elif dataset_name is PytorchClassificationModelOptions.FASHION_MNIST:
         train = pytorch_datasets.FashionMNIST(
             root="cache",
