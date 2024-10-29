@@ -83,19 +83,31 @@ class PytorchModelsImageClassification(Problem):
             self.test_features = self.test_features.reshape(-1, 1, 28, 28)
 
             self.model = TinyVGG(
-                input_shape=1,
-                hidden_units=10,
-                output_shape=self.number_of_classes
+                input_shape=1, hidden_units=10, output_shape=self.number_of_classes
             )
 
-        elif self.pytorch_model is PytorchClassificationModelOptions.ResNet50:
-            if dataset_name not in [PytorchClassificationModelOptions.CIFAR10, PytorchClassificationModelOptions.CIFAR100]:
-                raise ValueError("ResNet50 is only available for CIFAR10 and CIFAR100")
+        elif self.pytorch_model in [
+            PytorchClassificationModelOptions.ResNet50,
+            PytorchClassificationModelOptions.ResNet18,
+            PytorchClassificationModelOptions.ResNet34,
+        ]:
+            if dataset_name not in [
+                PytorchClassificationModelOptions.CIFAR10,
+                PytorchClassificationModelOptions.CIFAR100,
+            ]:
+                raise ValueError("ResNet is only available for CIFAR10 and CIFAR100")
 
             self.train_features = self.train_features.reshape(-1, 3, 32, 32)
             self.test_features = self.test_features.reshape(-1, 3, 32, 32)
-            from torchvision.models import resnet50
-            self.model = resnet50(pretrained=False, num_classes=self.number_of_classes)
+            if self.pytorch_model is PytorchClassificationModelOptions.ResNet18:
+                from torchvision.models import resnet18
+                self.model = resnet18(num_classes=self.number_of_classes)
+            if self.pytorch_model is PytorchClassificationModelOptions.ResNet34:
+                from torchvision.models import resnet34
+                self.model = resnet34(num_classes=self.number_of_classes)
+            if self.pytorch_model is PytorchClassificationModelOptions.ResNet50:
+                from torchvision.models import resnet50
+                self.model = resnet50(num_classes=self.number_of_classes)
         else:
             raise ValueError("Unknown pytorch model")
 
@@ -126,17 +138,15 @@ class PytorchModelsImageClassification(Problem):
 
         index = 0
         state_dict = self.model.state_dict()
-        for key in state_dict:
-            num_param = state_dict[key].numel()
-            state_dict[key] = x[index : index + num_param].view(state_dict[key].shape)
-            index += num_param
-
+        for name, param in self.model.named_parameters():
+            state_dict[name] = x[index : index + param.numel()].view(param.shape)
+            index += param.numel()
         self.model.load_state_dict(state_dict)
 
     def _parameter_grad_to_numpy_vector(self) -> np.ndarray:
         x = np.zeros((self.d,))
         index = 0
-        for param in self.model.parameters():
+        for _, param in self.model.named_parameters():
             x[index : index + param.numel()] = param.grad.view(-1).to("cpu").numpy()
             index += param.numel()
         return x.reshape(-1, 1)

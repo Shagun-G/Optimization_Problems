@@ -63,6 +63,8 @@ class PytorchClassificationModelOptions(ExtendedOptions):
     FNN = "FNN"
     TinyVGG = "TinyVGG"
     ResNet50 = "ResNet50"
+    ResNet18 = "ResNet18"
+    ResNet34 = "ResNet34"
 
     # activation functions
     ReLU = "ReLU"
