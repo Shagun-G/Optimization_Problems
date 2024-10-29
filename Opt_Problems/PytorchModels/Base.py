@@ -167,6 +167,10 @@ class PytorchModelsImageClassification(Problem):
         # convert vector to model parameters
         self._numpy_vector_assign_to_model(x)
 
+        if self.pytorch_model is PytorchClassificationModelOptions.ResNet18 or self.pytorch_model is PytorchClassificationModelOptions.ResNet34 or self.pytorch_model is PytorchClassificationModelOptions.ResNet50:
+            if len(data_points) > 1000:
+                return self._calculate_loss_batch_wise(self.train_features[data_points], self.train_labels[data_points])
+
         # calculate loss in eval mode
         self.model.eval()
         with torch.inference_mode():
@@ -247,7 +251,25 @@ class PytorchModelsImageClassification(Problem):
     def _accuracy(self, features: torch.Tensor, targets: torch.Tensor) -> float:
 
         self.model.eval()
+        acc = 0
         with torch.inference_mode():
-            output = torch.softmax(self.model(features), dim=1)
-        output = torch.argmax(output, dim=1)
-        return float(torch.sum(output == targets) / targets.shape[0])
+            index = 0
+            while index < features.shape[0]:
+                output = torch.softmax(self.model(features[index : index + 100]), dim=1)
+                acc += torch.sum(torch.argmax(output, dim=1) == targets[index : index + 100])
+                index += 100
+        
+        return float(acc / targets.shape[0])
+
+
+    def _calculate_loss_batch_wise(self, features: torch.Tensor, targets: torch.Tensor) -> float:
+
+        loss = 0
+        self.model.eval()
+        with torch.inference_mode():
+            index = 0
+            while index < features.shape[0]:
+                loss += 100*self.loss_fuction(self.model(features[index : index + 100]), targets[index : index + 100])
+                index += 100
+        
+        return float(loss / features.shape[0])

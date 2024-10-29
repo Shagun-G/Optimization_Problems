@@ -11,14 +11,14 @@ import torch
 #     Hidden_Layers=[128],
 #     Activation=PytorchClassificationModelOptions.ReLU,
 # )
-problem = PytorchModelsImageClassification(
-    dataset_name=PytorchClassificationModelOptions.FASHION_MNIST,
-    pytorch_model=PytorchClassificationModelOptions.TinyVGG,
-)
 # problem = PytorchModelsImageClassification(
-#     dataset_name=PytorchClassificationModelOptions.CIFAR100,
-#     pytorch_model=PytorchClassificationModelOptions.ResNet34,
+#     dataset_name=PytorchClassificationModelOptions.FASHION_MNIST,
+#     pytorch_model=PytorchClassificationModelOptions.TinyVGG,
 # )
+problem = PytorchModelsImageClassification(
+    dataset_name=PytorchClassificationModelOptions.CIFAR100,
+    pytorch_model=PytorchClassificationModelOptions.ResNet18,
+)
 
 # # """Calling all functions"""
 print("Name: " + problem.name)
@@ -38,12 +38,12 @@ print("Dimension : ", problem.d)
 ### Training Loop to Test gradients and Function Value ###
 
 x = problem.initial_point()
-for i in range(10000):
+for i in range(problem.number_of_datapoints * 50):
     x = x - 0.001 * problem.gradient(
         x=x, type=StochasticApproximationType.MiniBatch, batch_size=32
     )
 
-    if i % 50 == 0:
+    if i % 100 == 0:
         print("------------------{i}------------------".format(i=i))
         print(
             f"Train loss: ",
@@ -53,9 +53,3 @@ for i in range(10000):
         print("Accuracy train: ", problem.accuracy_train(x=x))
         print("Accuracy test: ", problem.accuracy_test(x=x))
         ## batched training data metrics ##
-        
-        # print(
-        #     f"Train loss: ",
-        #     problem.objective(x=x, type=StochasticApproximationType.FullBatch),
-        # )
-        # print("Accuracy train: ", problem.accuracy_train(x=x))
