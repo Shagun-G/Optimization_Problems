@@ -11,14 +11,14 @@ import torch
 #     Hidden_Layers=[128],
 #     Activation=PytorchClassificationModelOptions.ReLU,
 # )
-# problem = PytorchModelsImageClassification(
-#     dataset_name=PytorchClassificationModelOptions.FASHION_MNIST,
-#     pytorch_model=PytorchClassificationModelOptions.TinyVGG,
-# )
 problem = PytorchModelsImageClassification(
-    dataset_name=PytorchClassificationModelOptions.CIFAR100,
-    pytorch_model=PytorchClassificationModelOptions.ResNet34,
+    dataset_name=PytorchClassificationModelOptions.FASHION_MNIST,
+    pytorch_model=PytorchClassificationModelOptions.TinyVGG,
 )
+# problem = PytorchModelsImageClassification(
+#     dataset_name=PytorchClassificationModelOptions.CIFAR100,
+#     pytorch_model=PytorchClassificationModelOptions.ResNet34,
+# )
 
 # # """Calling all functions"""
 print("Name: " + problem.name)
@@ -45,10 +45,17 @@ for i in range(10000):
 
     if i % 50 == 0:
         print("------------------{i}------------------".format(i=i))
-#         print(
-#             f"Train loss: ",
-#             problem.objective(x=x, type=StochasticApproximationType.FullBatch),
-#         )
+        print(
+            f"Train loss: ",
+            problem.objective(x=x, type=StochasticApproximationType.FullBatch),
+        )
         print(f"Test loss: ", problem.objective_test(x=x))
-#         print("Accuracy train: ", problem.accuracy_train(x=x))
+        print("Accuracy train: ", problem.accuracy_train(x=x))
         print("Accuracy test: ", problem.accuracy_test(x=x))
+        ## batched training data metrics ##
+        
+        # print(
+        #     f"Train loss: ",
+        #     problem.objective(x=x, type=StochasticApproximationType.FullBatch),
+        # )
+        # print("Accuracy train: ", problem.accuracy_train(x=x))

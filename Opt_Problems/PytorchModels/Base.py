@@ -246,6 +246,8 @@ class PytorchModelsImageClassification(Problem):
 
     def _accuracy(self, features: torch.Tensor, targets: torch.Tensor) -> float:
 
-        output = torch.softmax(self.model(features), dim=1)
+        self.model.eval()
+        with torch.inference_mode():
+            output = torch.softmax(self.model(features), dim=1)
         output = torch.argmax(output, dim=1)
         return float(torch.sum(output == targets) / targets.shape[0])
