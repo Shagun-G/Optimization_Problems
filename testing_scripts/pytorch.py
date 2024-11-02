@@ -5,20 +5,20 @@ from Opt_Problems.Options import (
 )
 import torch
 
-# problem = PytorchModelsImageClassification(
-#     dataset_name=PytorchClassificationModelOptions.FASHION_MNIST,
-#     pytorch_model=PytorchClassificationModelOptions.FNN,
-#     Hidden_Layers=[128],
-#     Activation=PytorchClassificationModelOptions.ReLU,
-# )
+problem = PytorchModelsImageClassification(
+    dataset_name=PytorchClassificationModelOptions.MNIST,
+    pytorch_model=PytorchClassificationModelOptions.FNN,
+    Hidden_Layers=[128],
+    Activation=PytorchClassificationModelOptions.ReLU,
+)
 # problem = PytorchModelsImageClassification(
 #     dataset_name=PytorchClassificationModelOptions.FASHION_MNIST,
 #     pytorch_model=PytorchClassificationModelOptions.TinyVGG,
 # )
-problem = PytorchModelsImageClassification(
-    dataset_name=PytorchClassificationModelOptions.CIFAR100,
-    pytorch_model=PytorchClassificationModelOptions.ResNet18,
-)
+# problem = PytorchModelsImageClassification(
+#     dataset_name=PytorchClassificationModelOptions.CIFAR100,
+#     pytorch_model=PytorchClassificationModelOptions.ResNet18,
+# )
 
 # # """Calling all functions"""
 print("Name: " + problem.name)
@@ -27,7 +27,8 @@ print("Dimension : ", problem.d)
 # print("Function: ", problem.objective(x=problem.initial_point(), type=StochasticApproximationType.FullBatch))
 # print("Gradient : ", problem.gradient(x=problem.initial_point(), type=StochasticApproximationType.FullBatch))
 # print("Function: ", problem.objective(x=problem.initial_point(), type=StochasticApproximationType.MiniBatch, batch_size=4, seed=100))
-# print("adient : ", problem.gradient(x=problem.initial_point(), type=StochasticApproximationType.MiniBatch, batch_size=4, seed=100))
+print("adient : ", problem.gradient(x=problem.initial_point(), type=StochasticApproximationType.MiniBatch, batch_size=1, seed=100))
+print("adient : ", problem.gradient(x=problem.initial_point(), type=StochasticApproximationType.MiniBatch, batch_size=1, seed=100))
 # print("Function: ", problem.objective(x=problem.initial_point(), type=StochasticApproximationType.SpecifiedIndices, data_indices=[0, 1, 2, 3, 4, 5]))
 # print("Gradient : ", problem.gradient(x=problem.initial_point(), type=StochasticApproximationType.SpecifiedIndices, data_indices=[0, 1, 2, 3, 4, 5]))
 # 
@@ -38,10 +39,13 @@ print("Dimension : ", problem.d)
 ### Training Loop to Test gradients and Function Value ###
 
 x = problem.initial_point()
-for i in range(problem.number_of_datapoints * 50):
+for i in range(2000):
     x = x - 0.001 * problem.gradient(
         x=x, type=StochasticApproximationType.MiniBatch, batch_size=32
     )
+    # x = x - 1 * problem.gradient(
+    #     x=x, type=StochasticApproximationType.FullBatch
+    # )
 
     if i % 100 == 0:
         print("------------------{i}------------------".format(i=i))
@@ -52,4 +56,3 @@ for i in range(problem.number_of_datapoints * 50):
         print(f"Test loss: ", problem.objective_test(x=x))
         print("Accuracy train: ", problem.accuracy_train(x=x))
         print("Accuracy test: ", problem.accuracy_test(x=x))
-        ## batched training data metrics ##

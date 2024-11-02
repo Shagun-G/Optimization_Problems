@@ -204,11 +204,11 @@ class PytorchModelsImageClassification(Problem):
         )
 
         # calculate gradients
+        self.model.zero_grad()
         loss.backward()
 
         # convert gradients to vector
         grad = self._parameter_grad_to_numpy_vector()
-        self.model.zero_grad()
 
         return grad
 
@@ -253,11 +253,15 @@ class PytorchModelsImageClassification(Problem):
         self.model.eval()
         acc = 0
         with torch.inference_mode():
-            index = 0
-            while index < features.shape[0]:
-                output = torch.softmax(self.model(features[index : index + 100]), dim=1)
-                acc += torch.sum(torch.argmax(output, dim=1) == targets[index : index + 100])
-                index += 100
+            if self.pytorch_model is PytorchClassificationModelOptions.ResNet18 or self.pytorch_model is PytorchClassificationModelOptions.ResNet34 or self.pytorch_model is PytorchClassificationModelOptions.ResNet50:
+                index = 0
+                while index < features.shape[0]:
+                    output = torch.softmax(self.model(features[index : index + 100]), dim=1)
+                    acc += torch.sum(torch.argmax(output, dim=1) == targets[index : index + 100])
+                    index += 100
+            else:
+                output = torch.softmax(self.model(features), dim=1)
+                acc += torch.sum(torch.argmax(output, dim=1) == targets)
         
         return float(acc / targets.shape[0])
 
