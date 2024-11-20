@@ -4,8 +4,6 @@ import torchvision.datasets as pytorch_datasets
 from torchvision.transforms import ToTensor
 import torch
 from sklearn.datasets import load_svmlight_file
-import jax.numpy as jnp
-
 
 def create_rng(seed: int):
     if seed is None:
@@ -50,11 +48,11 @@ def generate_stochastic_batch(n, batch_size, rng):
 
 
 def relu(x):
-    return jnp.maximum(0, x)
+    return np.maximum(0, x)
 
 
-def one_hot(y, k, dtype=jnp.float32):
-    return jnp.array(y[:, None] == jnp.arange(k), dtype).T
+def one_hot(y, k, dtype=np.float32):
+    return np.array(y[:, None] == np.arange(k), dtype).T
 
 
 def datasets_manager(dataset_name: Datasets, location: str):

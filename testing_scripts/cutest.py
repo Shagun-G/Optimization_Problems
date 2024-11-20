@@ -1,7 +1,7 @@
 from Opt_Problems.Deterministic.CUTEST import CUTEST
 
-# name = "ELEC"
-name = "DISC2"
+name = "ELEC"
+# name = "DISC2"
 problem = CUTEST(name=name)
 # """Calling all functions"""
 print("Name : " + problem.name)
