@@ -101,12 +101,15 @@ class PytorchModelsImageClassification(Problem):
             self.test_features = self.test_features.reshape(-1, 3, 32, 32)
             if self.pytorch_model is PytorchClassificationModelOptions.ResNet18:
                 from torchvision.models import resnet18
+
                 self.model = resnet18(num_classes=self.number_of_classes)
             if self.pytorch_model is PytorchClassificationModelOptions.ResNet34:
                 from torchvision.models import resnet34
+
                 self.model = resnet34(num_classes=self.number_of_classes)
             if self.pytorch_model is PytorchClassificationModelOptions.ResNet50:
                 from torchvision.models import resnet50
+
                 self.model = resnet50(num_classes=self.number_of_classes)
         else:
             raise ValueError("Unknown pytorch model")
@@ -167,9 +170,15 @@ class PytorchModelsImageClassification(Problem):
         # convert vector to model parameters
         self._numpy_vector_assign_to_model(x)
 
-        if self.pytorch_model is PytorchClassificationModelOptions.ResNet18 or self.pytorch_model is PytorchClassificationModelOptions.ResNet34 or self.pytorch_model is PytorchClassificationModelOptions.ResNet50:
+        if (
+            self.pytorch_model is PytorchClassificationModelOptions.ResNet18
+            or self.pytorch_model is PytorchClassificationModelOptions.ResNet34
+            or self.pytorch_model is PytorchClassificationModelOptions.ResNet50
+        ):
             if len(data_points) > 1000:
-                return self._calculate_loss_batch_wise(self.train_features[data_points], self.train_labels[data_points])
+                return self._calculate_loss_batch_wise(
+                    self.train_features[data_points], self.train_labels[data_points]
+                )
 
         # calculate loss in eval mode
         self.model.eval()
@@ -253,27 +262,39 @@ class PytorchModelsImageClassification(Problem):
         self.model.eval()
         acc = 0
         with torch.inference_mode():
-            if self.pytorch_model is PytorchClassificationModelOptions.ResNet18 or self.pytorch_model is PytorchClassificationModelOptions.ResNet34 or self.pytorch_model is PytorchClassificationModelOptions.ResNet50:
+            if (
+                self.pytorch_model is PytorchClassificationModelOptions.ResNet18
+                or self.pytorch_model is PytorchClassificationModelOptions.ResNet34
+                or self.pytorch_model is PytorchClassificationModelOptions.ResNet50
+            ):
                 index = 0
                 while index < features.shape[0]:
-                    output = torch.softmax(self.model(features[index : index + 100]), dim=1)
-                    acc += torch.sum(torch.argmax(output, dim=1) == targets[index : index + 100])
+                    output = torch.softmax(
+                        self.model(features[index : index + 100]), dim=1
+                    )
+                    acc += torch.sum(
+                        torch.argmax(output, dim=1) == targets[index : index + 100]
+                    )
                     index += 100
             else:
                 output = torch.softmax(self.model(features), dim=1)
                 acc += torch.sum(torch.argmax(output, dim=1) == targets)
-        
+
         return float(acc / targets.shape[0])
 
-
-    def _calculate_loss_batch_wise(self, features: torch.Tensor, targets: torch.Tensor) -> float:
+    def _calculate_loss_batch_wise(
+        self, features: torch.Tensor, targets: torch.Tensor
+    ) -> float:
 
         loss = 0
         self.model.eval()
         with torch.inference_mode():
             index = 0
             while index < features.shape[0]:
-                loss += 100*self.loss_fuction(self.model(features[index : index + 100]), targets[index : index + 100])
+                loss += 100 * self.loss_fuction(
+                    self.model(features[index : index + 100]),
+                    targets[index : index + 100],
+                )
                 index += 100
-        
+
         return float(loss / features.shape[0])

@@ -27,6 +27,7 @@ class Datasets(ExtendedOptions):
     """Multiclass Classification Datasets"""
     MNIST = "mnist"
     CIFAR10 = "cifar10"
+    COVTYPE = "covtype"
 
 
 class StochasticApproximationType(ExtendedOptions):

@@ -85,7 +85,10 @@ def datasets_manager(dataset_name: Datasets, location: str):
 
     if dataset_name in [Datasets.MNIST, Datasets.CIFAR10]:
         X = X.toarray() / 255
-        X = X.T
+        
+    if dataset_name is Datasets.COVTYPE:
+        X = X.toarray()
+        y = y - 1
 
     """Normalization being done now at the problem formulation"""
 

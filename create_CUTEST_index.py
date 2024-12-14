@@ -8,6 +8,7 @@ with open("list_of_python_problems") as f:
     ]
 
 names = []
+dimension = []
 n_constraints = []
 n_equality = []
 n_inequality = []
@@ -24,6 +25,7 @@ for name in tqdm(list_of_python_problems):
 
     print("Name : " + problem.name)
     names.append(problem.name)
+    dimension.append(problem.d)
     n_constraints.append(problem.number_of_eq_constraints + problem.number_of_ineq_constraints)
     n_equality.append(problem.number_of_eq_constraints)
     n_inequality.append(problem.number_of_ineq_constraints)
@@ -32,6 +34,7 @@ for name in tqdm(list_of_python_problems):
 total_intex = pd.DataFrame(
     {
         "name": names,
+        "dimension" : dimension,
         "n_constraints": n_constraints,
         "n_equality": n_equality,
         "n_inequality": n_inequality,
