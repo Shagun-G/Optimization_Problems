@@ -83,6 +83,8 @@ def datasets_manager(dataset_name: Datasets, location: str):
         # the target has to be changed from {-1, +1} to {0, 1}
         y[y == -1] = 0
 
+    """Normalization being done now at the problem formulation for Binary Datasets"""
+
     if dataset_name in [Datasets.MNIST, Datasets.CIFAR10]:
         X = X.toarray() / 255
         
@@ -90,7 +92,6 @@ def datasets_manager(dataset_name: Datasets, location: str):
         X = X.toarray()
         y = y - 1
 
-    """Normalization being done now at the problem formulation"""
 
     return X, y
 

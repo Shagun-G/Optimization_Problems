@@ -367,8 +367,8 @@ class MultiClassLogisticRegression(Problem):
                 self._targets[data_points],
             )
 
-        if self.regularize:
-            loss += np.linalg.norm(x) ** 2 / self.number_of_datapoints
+            if self.regularize:
+                loss += np.linalg.norm(x) ** 2 / self.number_of_datapoints
 
         return float(loss)
 
