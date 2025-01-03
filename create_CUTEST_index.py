@@ -39,7 +39,8 @@ total_intex = pd.DataFrame(
         "n_constraints": n_constraints,
         "n_equality": n_equality,
         "n_inequality": n_inequality,
-        "has_bounds": has_bounds
+        "has_bounds": has_bounds,
+        "is_real": is_real
     }
 )
 total_intex.to_csv("CUTEST_index.csv")
