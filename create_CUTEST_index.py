@@ -13,9 +13,9 @@ n_constraints = []
 n_equality = []
 n_inequality = []
 has_bounds = []
+is_real = []
 
 for name in tqdm(list_of_python_problems):
-# for name in tqdm(["ELEC"]):
 
     try:
         problem = CUTEST(name=name)
@@ -30,6 +30,7 @@ for name in tqdm(list_of_python_problems):
     n_equality.append(problem.number_of_eq_constraints)
     n_inequality.append(problem.number_of_ineq_constraints)
     has_bounds.append(problem.has_bound_constraints)
+    is_real.append(problem.real_problem())
 
 total_intex = pd.DataFrame(
     {

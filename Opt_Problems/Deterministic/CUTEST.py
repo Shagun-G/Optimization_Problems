@@ -83,3 +83,12 @@ class CUTEST(Problem):
 
     def varable_upper_bounds(self) -> np.ndarray:
         return self._cutest_problem.xupper
+
+    def real_problem(self) -> bool:
+
+        classification = self._cutest_problem.pbclass
+        classification_parts = classification.split('-')
+        char_after_first_hyphen = classification_parts[1][0]
+
+        return char_after_first_hyphen == 'R'
+
