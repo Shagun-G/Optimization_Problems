@@ -1,5 +1,5 @@
 from Opt_Problems.Base import Problem
-from Opt_Problems.Deterministic.S2MPJ_support_files.cutest_parameters import CUTEST_PARAMETERS
+# from Opt_Problems.Deterministic.cutest_parameters import CUTEST_PARAMETERS
 import numpy as np
 import importlib
 
@@ -8,10 +8,11 @@ class CUTEST(Problem):
     '''Uses the s2mpj framework and it's corresponing files are stored in the s2mpj folder.'''
 
     def __init__(self, name: str) -> None:
-        problem = importlib.import_module("Opt_Problems.Deterministic.S2MPJ_support_files.cutest_python_problems." + name)
+        problem = importlib.import_module("Opt_Problems.Deterministic.cutest_python_problems." + name)
         problem = getattr(problem, name)
-        invals = getattr(CUTEST_PARAMETERS, name).value
-        exec("self._cutest_problem = problem(" + invals + ")")
+        # invals = getattr(CUTEST_PARAMETERS, name).value
+        # exec("self._cutest_problem = problem(" + invals + ")")
+        exec("self._cutest_problem = problem()")
         if self._cutest_problem.m == 0: 
             m_eq = 0
             m_ineq = 0

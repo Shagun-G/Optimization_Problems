@@ -1,14 +1,15 @@
 from Opt_Problems.Deterministic.CUTEST import CUTEST
+import importlib
 
-name = "CVXQP1"
+name = "ALLINITA"
 # name = "DISC2"
 problem = CUTEST(name=name)
 # """Calling all functions"""
-print("Name : " + problem.name)
-print(problem.real_problem())
+# print("Name : " + problem.name)
+# print(problem.real_problem())
 # print("Dimension : ", problem.d)
 # print("At x = ", problem.initial_point())
-# print("Function : ", problem.objective(x=problem.initial_point()))
+print("Function : ", problem.objective(x=problem.initial_point()))
 # print("Gradient : ", problem.gradient(x=problem.initial_point()))
 # print("c_eq : ", problem.constraints_eq(x=problem.initial_point()))
 # print("J_eq : ", problem.constraints_eq_jacobian(x=problem.initial_point()))

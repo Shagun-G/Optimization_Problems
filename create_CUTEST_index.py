@@ -23,7 +23,8 @@ for name in tqdm(list_of_python_problems):
         print(f"error with {name}", e)
         continue
 
-    print("Name : " + problem.name)
+    # print("Name : " + problem.name)
+    f = problem.objective(problem.initial_point())
     names.append(problem.name)
     dimension.append(problem.d)
     n_constraints.append(problem.number_of_eq_constraints + problem.number_of_ineq_constraints)
